@@ -1,10 +1,10 @@
 # vue-utils
 
-> A Vue.js project
+> vue 工具类
 
 ## Build Setup
 
-``` bash
+```bash
 # install dependencies
 npm install
 
