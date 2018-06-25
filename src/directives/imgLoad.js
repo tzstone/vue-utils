@@ -1,6 +1,9 @@
+import loadingImg from '../assets/loading.gif'
 export default {
   install(Vue) {
-    Vue.directive('imgLoader', function (el, binding) {
+    Vue.directive('img-load', function (el, binding) {
+      if (!el.src) el.src = loadingImg
+
       if (!binding.value) return
 
       let img = new Image()
