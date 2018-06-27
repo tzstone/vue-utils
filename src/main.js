@@ -6,9 +6,11 @@ import router from './router'
 
 import imgLoad from './directives/imgLoad'
 import keyboard from './directives/keyboard'
+import clickoutside from './directives/clickoutside'
 
 Vue.use(imgLoad)
 Vue.use(keyboard)
+Vue.use(clickoutside)
 
 Vue.config.productionTip = false
 

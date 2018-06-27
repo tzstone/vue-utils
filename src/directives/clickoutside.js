@@ -3,12 +3,14 @@ import { on, off } from '@/utils/dom'
 const context = '@@clickoutsideContext'
 const nodeList = []
 var id = 0
-var listen = false
+var isBinding = false
 
-const clickHandler = e =>
+const clickHandler = e => {
+	console.log('clickHandler', nodeList, e)
 	nodeList.forEach(node => {
-		node[context].handler()
+		node[context].handler(e)
 	})
+}
 
 export default {
 	bind: function(el, binding) {
@@ -26,9 +28,10 @@ export default {
 
 		nodeList.push(el)
 
-		!listen && on(document, 'click', clickHandler)
-
-		listen = true
+		if (!isBinding) {
+			on(document, 'click', clickHandler)
+			isBinding = true
+		}
 	},
 	unbind: function(el) {
 		for (let i = 0, len = nodeList.length; i < len; i++) {
@@ -38,6 +41,15 @@ export default {
 			}
 		}
 
-		nodeList.length === 0 && off(document, 'click', clickHandler)
+		if (nodeList.length === 0) {
+			off(document, 'click', clickHandler)
+			isBinding = false
+		}
+	},
+	install: function(Vue) {
+		Vue.directive('clickoutside', {
+			bind: this.bind,
+			unbind: this.unbind
+		})
 	}
 }
