@@ -61,7 +61,7 @@ export function getScrollHeight(ele) {
 
 export function getClientHeight(ele) {
 	return ele == document.body
-		? document.compatMode == 'CSS1Compat'
+		? document.compatMode == 'CSS1Compat' // 文档处于"标准模式"或"准标准模式"
 			? document.documentElement.clientHeight
 			: document.body.clientHeight
 		: ele.clientHeight
