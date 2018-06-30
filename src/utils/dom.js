@@ -1,3 +1,15 @@
+var supportsPassive = false
+try {
+	var opts = {}
+	Object.defineProperty(opts, 'passive', {
+		get: function get() {
+			/* istanbul ignore next */
+			supportsPassive = true
+		}
+	}) // https://github.com/facebook/flow/issues/285
+	window.addEventListener('test-passive', null, opts)
+} catch (e) {}
+
 export function attr(el, prop, value) {
 	if (prop && value) el.setAttribute(prop, value)
 	else return el.getAttribute(prop)
@@ -5,8 +17,13 @@ export function attr(el, prop, value) {
 
 export const on = (function() {
 	if (document.addEventListener) {
-		return function(el, event, handler) {
-			el.addEventListener(event, handler, false)
+		// passive=true, 事件处理程序不会调用preventDefault
+		return function(el, event, handler, passive = true, capture = false) {
+			el.addEventListener(
+				event,
+				handler,
+				supportsPassive ? { capture: capture, passive: passive } : capture
+			)
 		}
 	} else {
 		return function(el, event, handler) {
@@ -17,8 +34,8 @@ export const on = (function() {
 
 export const off = (function() {
 	if (document.addEventListener) {
-		return function(el, event, handler) {
-			el.removeEventListener(event, handler, false)
+		return function(el, event, handler, capture = false) {
+			el.removeEventListener(event, handler, capture)
 		}
 	} else {
 		return function(el, event, handler) {
@@ -26,3 +43,26 @@ export const off = (function() {
 		}
 	}
 })()
+
+export function getScrollTop(ele) {
+	return ele == document.body
+		? Math.max(document.documentElement.scrollTop, document.body.scrollTop)
+		: ele.scrollTop
+}
+
+export function getScrollHeight(ele) {
+	return ele == document.body
+		? Math.max(
+				document.documentElement.scrollHeight,
+				document.body.scrollHeight
+		  )
+		: ele.scrollHeight
+}
+
+export function getClientHeight(ele) {
+	return ele == document.body
+		? document.compatMode == 'CSS1Compat'
+			? document.documentElement.clientHeight
+			: document.body.clientHeight
+		: ele.clientHeight
+}

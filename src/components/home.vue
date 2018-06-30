@@ -10,16 +10,18 @@
       <li>
         <router-link to='/clickoutside'>clickoutside</router-link>
       </li>
+      <li>
+        <router-link to='/iosBounce'>iosBounce</router-link>
+      </li>
     </ul>
   </div>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-    }
-  }
+	data() {
+		return {}
+	}
 }
 </script>
 

@@ -4,6 +4,7 @@ import home from '@/components/home'
 import imgLoad from '@/examples/imgLoad'
 import keyboard from '@/examples/keyboard'
 import clickoutside from '@/examples/clickoutside'
+import iosBounce from '@/examples/iosBounce'
 
 Vue.use(Router)
 
@@ -28,6 +29,11 @@ export default new Router({
 			path: '/clickoutside',
 			name: 'clickoutside',
 			component: clickoutside
+		},
+		{
+			path: '/iosBounce',
+			name: 'iosBounce',
+			component: iosBounce
 		}
 	]
 })
