@@ -5,6 +5,7 @@ import imgLoad from '@/examples/imgLoad'
 import keyboard from '@/examples/keyboard'
 import clickoutside from '@/examples/clickoutside'
 import iosBounce from '@/examples/iosBounce'
+import sticky from '@/examples/sticky'
 
 Vue.use(Router)
 
@@ -34,6 +35,11 @@ export default new Router({
 			path: '/iosBounce',
 			name: 'iosBounce',
 			component: iosBounce
+		},
+		{
+			path: '/sticky',
+			name: 'sticky',
+			component: sticky
 		}
 	]
 })

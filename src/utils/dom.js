@@ -46,8 +46,18 @@ export const off = (function() {
 
 export function getScrollTop(ele) {
 	return ele == document.body
-		? Math.max(document.documentElement.scrollTop, document.body.scrollTop)
+		? typeof window.pageYOffset === 'number'
+			? window.pageYOffset
+			: Math.max(document.documentElement.scrollTop, document.body.scrollTop)
 		: ele.scrollTop
+}
+
+export function getScrollLeft(ele) {
+	return ele == document.body
+		? typeof window.pageXOffset === 'number'
+			? window.pageXOffset
+			: Math.max(document.documentElement.scrollLeft, document.body.scrollLeft)
+		: ele.scrollLeft
 }
 
 export function getScrollHeight(ele) {
