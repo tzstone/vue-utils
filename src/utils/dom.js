@@ -38,8 +38,11 @@ export const on = (function() {
 
 export const off = (function() {
 	if (document.addEventListener) {
-		return function(el, event, handler, capture = false) {
-			el.removeEventListener(event, handler, capture)
+		return function(el, event, handler, passive = true, capture = false) {
+			el.removeEventListener(
+				event, 
+				handler, 
+				supportsPassive ? { capture: capture, passive: passive } : capture)
 		}
 	} else {
 		return function(el, event, handler) {
@@ -48,14 +51,14 @@ export const off = (function() {
 	}
 })()
 
-export const once = function (el, event, fn) {
+export const once = function (el, event, fn, passive = true, capture = false) {
   var listener = function () {
     if (fn) {
       fn.apply(this, arguments)
     }
-    off(el, event, listener)
+    off(el, event, listener, passive, capture)
   }
-  on(el, event, listener)
+  on(el, event, listener, passive, capture)
 }
 
 export function hasClass (el, cls) {
