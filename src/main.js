@@ -1,34 +1,26 @@
+/* eslint-disable */
 import Vue from 'vue'
 import App from './App'
-import router from './router'
-import store from './store'
-
-// vconsole
-import VConsole from 'vconsole/dist/vconsole.min.js' // import vconsole
-new VConsole() // 初始化
-
-// css
+import { importAll } from '@/utils'
 import './styles/reset.css'
 
-// directives
-import imgLoad from './directives/img-load'
-import keyboard from './directives/keyboard'
-import clickoutside from './directives/clickoutside'
-import iosBounce from './directives/ios-bounce'
-import sticky from './directives/sticky'
+const instanceOption = {}
+const plugins = importAll(require.context('./plugins/', false, /\.js$/))
 
-Vue.use(imgLoad)
-Vue.use(keyboard)
-Vue.use(clickoutside)
-Vue.use(iosBounce)
-Vue.use(sticky)
+plugins.forEach(m => {
+  const option = m.default || m
+  if (option.vueInstanceOption) {
+    Object.keys(option.vueInstanceOption).forEach(key => {
+      instanceOption[key] = option.vueInstanceOption[key]
+    })
+  }
+})
 
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
-  router,
-  store,
+  ...instanceOption,
   components: { App },
   render: h => h(App)
 }).$mount('#app')
