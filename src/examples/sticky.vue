@@ -1,24 +1,24 @@
 <template>
   <div>
-    <div v-sticky='{stickyTop: stickyTop}' class="header"></div>
+    <div v-sticky="{stickyTop: stickyTop}" class="header" />
     <ul>
-      <li v-for="t in 10">{{t}}</li>
+      <li v-for="t in 10" :key="t">{{ t }}</li>
     </ul>
   </div>
 </template>
 
 <script>
 export default {
-	data() {
-		return {
-			stickyTop: 0
-		}
-	},
-	mounted() {
-		setTimeout(() => {
-			this.stickyTop = 100
-		}, 10 * 1e3)
-	}
+  data() {
+    return {
+      stickyTop: 0
+    }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.stickyTop = 100
+    }, 10 * 1e3)
+  }
 }
 </script>
 

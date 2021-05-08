@@ -2,19 +2,19 @@
   <div class="hello">
     <ul>
       <li>
-        <router-link to='/imgLoad'>imgLoad</router-link>
+        <router-link to="/imgLoad">imgLoad</router-link>
       </li>
       <li>
-        <router-link to='/keyboard'>keyboard</router-link>
+        <router-link to="/keyboard">keyboard</router-link>
       </li>
       <li>
-        <router-link to='/clickoutside'>clickoutside</router-link>
+        <router-link to="/clickoutside">clickoutside</router-link>
       </li>
       <li>
-        <router-link to='/iosBounce'>iosBounce</router-link>
+        <router-link to="/iosBounce">iosBounce</router-link>
       </li>
       <li>
-        <router-link to='/sticky'>sticky</router-link>
+        <router-link to="/sticky">sticky</router-link>
       </li>
     </ul>
   </div>
@@ -22,10 +22,10 @@
 
 <script>
 export default {
-	data() {
-		return {}
-	},
-	mounted() {}
+  data() {
+    return {}
+  },
+  mounted() {}
 }
 </script>
 

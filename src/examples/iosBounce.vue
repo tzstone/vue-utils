@@ -1,14 +1,14 @@
 <template>
-    <ul v-ios-bounce.up>
-      <li v-for="item in 10">{{item}}</li>
-    </ul>
+  <ul v-ios-bounce.up>
+    <li v-for="item in 10" :key="item">{{ item }}</li>
+  </ul>
 </template>
 
 <script>
 export default {
-	data() {
-		return {}
-	}
+  data() {
+    return {}
+  }
 }
 </script>
 

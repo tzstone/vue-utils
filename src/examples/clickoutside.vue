@@ -1,33 +1,33 @@
 <template>
+  <div>
     <div>
-        <div>
-            <div v-show="showMask1" class="mask1"></div>
-            <div v-clickoutside='clickoutside1' class="dialog1">click dialog1</div>
-        </div>
-
-        <div>
-            <div v-show="showMask2" class="mask2"></div>
-            <div v-clickoutside='clickoutside2' class="dialog2">click dialog2</div>
-        </div>
+      <div v-show="showMask1" class="mask1" />
+      <div v-clickoutside="clickoutside1" class="dialog1">click dialog1</div>
     </div>
+
+    <div>
+      <div v-show="showMask2" class="mask2" />
+      <div v-clickoutside="clickoutside2" class="dialog2">click dialog2</div>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
-	data() {
-		return {
-			showMask1: true,
-			showMask2: true
-		}
-	},
-	methods: {
-		clickoutside1() {
-			this.showMask1 = false
-		},
-		clickoutside2() {
-			this.showMask2 = false
-		}
-	}
+  data() {
+    return {
+      showMask1: true,
+      showMask2: true
+    }
+  },
+  methods: {
+    clickoutside1() {
+      this.showMask1 = false
+    },
+    clickoutside2() {
+      this.showMask2 = false
+    }
+  }
 }
 </script>
 
