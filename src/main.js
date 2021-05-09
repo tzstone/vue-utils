@@ -1,17 +1,21 @@
-/* eslint-disable */
 import Vue from 'vue'
 import App from './App'
-import { importAll } from '@/utils'
+import { importAll, defSortImportAll } from '@/utils'
 import './styles/reset.css'
 
 const instanceOption = {}
-const plugins = importAll(require.context('./plugins/', false, /\.js$/))
+const plugins = importAll(require.context('./plugins/', false, /\.js$/), defSortImportAll)
 
 plugins.forEach(m => {
   const option = m.default || m
   if (option.vueInstanceOption) {
     Object.keys(option.vueInstanceOption).forEach(key => {
-      instanceOption[key] = option.vueInstanceOption[key]
+      if (key === 'mixin') {
+        if (!instanceOption['mixins']) instanceOption['mixins'] = []
+        instanceOption['mixins'].push(option.vueInstanceOption[key])
+      } else {
+        instanceOption[key] = option.vueInstanceOption[key]
+      }
     })
   }
 })
