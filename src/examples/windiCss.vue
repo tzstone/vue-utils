@@ -3,8 +3,8 @@
     <div class="flex">
       <p v-for="item in 3" :key="item" class="ml-2 p-3 first:bg-green-100 last:hover:text-white">p{{ item }}</p>
     </div>
-    <button class="btn block">@apply</button>
-    <button class="block; disabled:opacity-50" disabled>disable</button>
+    <button class="btn block mt-[0.3px]">@apply</button>
+    <button class="block; disabled:opacity-50; bg-hex-b2a8bb" disabled>disable</button>
     <p class="text-blue-500 font-serif inline-block p-1 skew-10deg">extend</p>
   </div>
 </template>
