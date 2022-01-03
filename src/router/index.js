@@ -6,6 +6,7 @@ import keyboard from '@/examples/keyboard'
 import clickoutside from '@/examples/clickoutside'
 import iosBounce from '@/examples/iosBounce'
 import sticky from '@/examples/sticky'
+import windiCss from '@/examples/windiCss'
 
 Vue.use(Router)
 
@@ -41,6 +42,11 @@ export default new Router({
       path: '/sticky',
       name: 'sticky',
       component: sticky
+    },
+    {
+      path: '/windiCss',
+      name: 'windiCss',
+      component: windiCss
     }
   ]
 })

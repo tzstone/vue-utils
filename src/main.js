@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App'
 import { importAll, defSortImportAll } from '@/utils'
 import './styles/reset.css'
+import 'windi.css'
 
 const instanceOption = {}
 const plugins = importAll(require.context('./plugins/', false, /\.js$/), defSortImportAll)
