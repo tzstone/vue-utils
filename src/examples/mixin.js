@@ -8,6 +8,15 @@ const getStoreValue = (store, paths) => {
   return getStoreValue(store[path], paths)
 }
 
+const setStoreValue = (store, paths, value) => {
+  const path = paths.shift()
+  if (paths.length === 0) {
+    store[path] = value
+  } else {
+    setStoreValue(store[path], paths, value)
+  }
+}
+
 // 从store获取数据进行初始化
 function initData() {
   Object.entries(this._data.storeKeyMap).forEach(([key, pathStr]) => {
@@ -23,17 +32,7 @@ function initWatch() {
   Object.entries(this._data.storeKeyMap).forEach(([key, pathStr]) => {
     const handler = function(value) {
       console.log('mixin', key, 'change')
-      const paths = pathStr.split('.')
-      // 限制三层
-      if (paths.length === 0) {
-        return
-      } else if (paths.length === 1) {
-        this.$store.state[paths[0]] = value
-      } else if (paths.length === 2) {
-        this.$store.state[paths[0]][paths[1]] = value
-      } else if (paths.length === 3) {
-        this.$store.state[paths[0]][paths[1]][paths[2]] = value
-      }
+      setStoreValue(this.$store.state, pathStr.split('.'), value)
     }
 
     this.$watch(key, throttle(handler), { deep: true })
