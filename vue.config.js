@@ -1,10 +1,11 @@
 const path = require('path')
-
+const isProduction = process.env.NODE_ENV === 'production'
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
 module.exports = {
+  productionSourceMap: false,
   configureWebpack: {
     resolve: {
       alias: {
@@ -29,5 +30,9 @@ module.exports = {
         symbolId: 'icon-[name]'
       })
       .end()
+
+    if (isProduction) {
+      config.plugins.delete('prefetch')
+    }
   }
 }

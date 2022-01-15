@@ -7,6 +7,7 @@ import clickoutside from '@/examples/clickoutside'
 import iosBounce from '@/examples/iosBounce'
 import sticky from '@/examples/sticky'
 import windiCss from '@/examples/windiCss'
+import form from '@/examples/form'
 
 Vue.use(Router)
 
@@ -47,6 +48,11 @@ export default new Router({
       path: '/windiCss',
       name: 'windiCss',
       component: windiCss
+    },
+    {
+      path: '/form',
+      name: 'form',
+      component: form
     }
   ]
 })
