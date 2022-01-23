@@ -9,6 +9,7 @@
       <router-link to="/sticky">sticky</router-link>
       <router-link to="/windiCss">windiCss</router-link>
       <router-link to="/form">form</router-link>
+      <router-link to="/worker">worker</router-link>
     </div>
     <div class="item">
       filter: {{ 2.1234 | toFixed }}

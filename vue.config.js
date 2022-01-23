@@ -1,4 +1,5 @@
 const path = require('path')
+const WorkerPlugin = require('worker-plugin')
 const isProduction = process.env.NODE_ENV === 'production'
 function resolve(dir) {
   return path.join(__dirname, dir)
@@ -11,7 +12,10 @@ module.exports = {
       alias: {
         '@': path.resolve(__dirname, 'src')
       }
-    }
+    },
+    plugins: [
+      new WorkerPlugin()
+    ]
   },
   chainWebpack(config) {
     // set svg-sprite-loader

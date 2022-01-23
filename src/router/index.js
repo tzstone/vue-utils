@@ -8,6 +8,7 @@ import iosBounce from '@/examples/iosBounce'
 import sticky from '@/examples/sticky'
 import windiCss from '@/examples/windiCss'
 import form from '@/examples/form'
+import myWorker from '@/examples/worker.vue'
 
 Vue.use(Router)
 
@@ -53,6 +54,11 @@ export default new Router({
       path: '/form',
       name: 'form',
       component: form
+    },
+    {
+      path: '/worker',
+      name: 'worker',
+      component: myWorker
     }
   ]
 })
