@@ -22,6 +22,24 @@ export default {
           }
         }
       }
+      // 另一种方式
+      // inserted: function(el, binding) {
+      //   new Vue({
+      //     computed: {
+      //       // 该vm没有parent.$store, 所以store不会注入到该vm的$store
+      //       hasPermission: () => store.state.permission.hasPermission
+      //     },
+      //     watch: {
+      //       hasPermission: function(hasPermission) {
+      //         if (hasPermission) {
+      //           el.style.display = 'block'
+      //         } else {
+      //           el.style.display = 'none'
+      //         }
+      //       }
+      //     }
+      //   })
+      // }
     })
   }
 }
