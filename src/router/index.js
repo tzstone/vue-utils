@@ -9,6 +9,7 @@ import sticky from '@/examples/sticky'
 import windiCss from '@/examples/windiCss'
 import form from '@/examples/form'
 import myWorker from '@/examples/worker.vue'
+import permission from '@/examples/permission.vue'
 
 Vue.use(Router)
 
@@ -59,6 +60,11 @@ export default new Router({
       path: '/worker',
       name: 'worker',
       component: myWorker
+    },
+    {
+      path: '/permission',
+      name: 'permission',
+      component: permission
     }
   ]
 })
