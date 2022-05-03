@@ -11,3 +11,15 @@ export function isNumber(num) {
 
   return false
 }
+
+export function isObject(obj) {
+  return typeof obj === 'object' && obj !== null
+}
+
+export function isPlainObject(obj) {
+  return Object.prototype.toString.call(obj) === '[object Object]'
+}
+
+export function isArray(arr) {
+  return Array.isArray(arr)
+}

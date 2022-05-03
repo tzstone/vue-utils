@@ -5,3 +5,5 @@ export * from './dev'
 export * from './validate'
 export * from './util'
 export * from './threadPool'
+export * from './vuexMapFields'
+

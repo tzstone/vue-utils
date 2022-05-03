@@ -1,3 +1,4 @@
+// 采用vuexMapFields的方式, 以下方法废弃
 import { throttle } from '@/utils'
 
 const getStoreValue = (store, paths) => {
