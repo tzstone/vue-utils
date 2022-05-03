@@ -58,6 +58,7 @@ export const mapFields = normalizeNamespace((namespace, fields, getterType, muta
       get() {
         const store = this.$store
         const value = store.getters[getterType](path)
+
         if (isObject(value) && !field._unwatch) {
           // $nextTick里watch: 避免被当成依赖收集
           this.$nextTick(() => {
@@ -70,11 +71,6 @@ export const mapFields = normalizeNamespace((namespace, fields, getterType, muta
         return value
       },
       set(value) {
-        // 新引用, 销毁原watch
-        if (field._unwatch) {
-          field._unwatch()
-          field._unwatch = null
-        }
         this.$store.commit(mutationType, { path, value })
       }
     }
