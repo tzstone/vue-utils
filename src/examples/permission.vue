@@ -1,5 +1,7 @@
 <template>
   <div>
+    <button @click="toggle">toggle permission</button>
+
     <button v-permission.show>permission btn</button>
   </div>
 </template>
@@ -13,7 +15,9 @@ export default {
     }
   },
   methods: {
-
+    toggle() {
+      this.$store.commit('togglePermission')
+    }
   }
 }
 </script>
