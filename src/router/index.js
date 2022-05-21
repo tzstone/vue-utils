@@ -1,70 +1,18 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import home from '@/components/home'
-import imgLoad from '@/examples/imgLoad'
-import keyboard from '@/examples/keyboard'
-import clickoutside from '@/examples/clickoutside'
-import iosBounce from '@/examples/iosBounce'
-import sticky from '@/examples/sticky'
-import windiCss from '@/examples/windiCss'
-import form from '@/examples/form'
-import myWorker from '@/examples/worker.vue'
-import permission from '@/examples/permission.vue'
-
+const path = require('path')
+const routes = []
+const files = require.context('@/examples', false, /\.vue$/)
+files.keys().forEach(key => {
+  const name = path.basename(key, '.vue')
+  routes.push({
+    path: name === 'home' ? '/' : `/${name}`,
+    name: name,
+    component: files(key).default || files(key)
+  })
+})
 Vue.use(Router)
 
 export default new Router({
-  // mode: 'history',
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: home
-    },
-    {
-      path: '/imgLoad',
-      name: 'imgLoad',
-      component: imgLoad
-    },
-    {
-      path: '/keyboard',
-      name: 'keyboard',
-      component: keyboard
-    },
-    {
-      path: '/clickoutside',
-      name: 'clickoutside',
-      component: clickoutside
-    },
-    {
-      path: '/iosBounce',
-      name: 'iosBounce',
-      component: iosBounce
-    },
-    {
-      path: '/sticky',
-      name: 'sticky',
-      component: sticky
-    },
-    {
-      path: '/windiCss',
-      name: 'windiCss',
-      component: windiCss
-    },
-    {
-      path: '/form',
-      name: 'form',
-      component: form
-    },
-    {
-      path: '/worker',
-      name: 'worker',
-      component: myWorker
-    },
-    {
-      path: '/permission',
-      name: 'permission',
-      component: permission
-    }
-  ]
+  routes
 })

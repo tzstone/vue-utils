@@ -2,15 +2,7 @@
   <div class="home">
     <div class="item">
       router:
-      <router-link to="/imgLoad">imgLoad</router-link>
-      <router-link to="/keyboard">keyboard</router-link>
-      <router-link to="/clickoutside">clickoutside</router-link>
-      <router-link to="/iosBounce">iosBounce</router-link>
-      <router-link to="/sticky">sticky</router-link>
-      <router-link to="/windiCss">windiCss</router-link>
-      <router-link to="/form">form</router-link>
-      <router-link to="/worker">worker</router-link>
-      <router-link to="/permission">permission</router-link>
+      <router-link v-for="(r, i) in routes" :key="i" :to="r.path">{{ r.name }}</router-link>
     </div>
     <div class="item">
       filter: {{ 2.1234 | toFixed }}
@@ -36,6 +28,11 @@
 export default {
   data() {
     return {}
+  },
+  computed: {
+    routes() {
+      return this.$router.getRoutes()
+    }
   },
   mounted() {},
   methods: {
