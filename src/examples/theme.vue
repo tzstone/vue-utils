@@ -4,15 +4,23 @@
     <div class="outer">
       outer
       <div class="inner" :style="innerStyles">
-        <span>inner</span>
+        <inner />
+        <chart :style-obj="innerStyles" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import inner from '@/components/theme/inner'
+import chart from '@/components/theme/chart'
+
 export default {
   name: '',
+  components: {
+    inner,
+    chart
+  },
   data() {
     return {
       innerStyles: {
@@ -32,9 +40,6 @@ export default {
 
 <style lang='less' scoped>
 .inner{
-  span{
-    background-color: var(--bg-color);
-    color: var(--text-color);
-  }
+
 }
 </style>
