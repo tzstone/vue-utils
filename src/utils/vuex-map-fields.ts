@@ -19,9 +19,7 @@ function arrayToObject(fields = []) {
 function normalizeNamespace(fn) {
   return (...params) => {
     // eslint-disable-next-line prefer-const
-    let [namespace, map, getterType, mutationType] = typeof params[0] === `string`
-      ? [...params]
-      : [``, ...params]
+    let [namespace, map, getterType, mutationType] = typeof params[0] === `string` ? [...params] : [``, ...params]
 
     if (namespace.length && namespace.charAt(namespace.length - 1) !== `/`) {
       namespace += `/`
@@ -62,9 +60,13 @@ export const mapFields = normalizeNamespace((namespace, fields, getterType, muta
         if (isObject(value) && !field._unwatch) {
           // $nextTick里watch: 避免被当成依赖收集
           this.$nextTick(() => {
-            field._unwatch = this.$watch(key, function(val) {
-              store.commit(mutationType, { path, value: val })
-            }, { deep: true })
+            field._unwatch = this.$watch(
+              key,
+              function (val) {
+                store.commit(mutationType, { path, value: val })
+              },
+              { deep: true }
+            )
           })
         }
 
@@ -85,10 +87,5 @@ export const mapFields = normalizeNamespace((namespace, fields, getterType, muta
 export const createHelpers = ({ getterType, mutationType }) => ({
   [getterType]: getField,
   [mutationType]: updateField,
-  mapFields: normalizeNamespace((namespace, fields) => mapFields(
-    namespace,
-    fields,
-    getterType,
-    mutationType
-  ))
+  mapFields: normalizeNamespace((namespace, fields) => mapFields(namespace, fields, getterType, mutationType))
 })

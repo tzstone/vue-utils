@@ -1,5 +1,5 @@
 const mixin = {
-  created: function() {
+  created: function () {
     console.log('i am mixin')
   }
 }

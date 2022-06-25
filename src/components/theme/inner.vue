@@ -8,16 +8,15 @@
 export default {
   name: '',
   data() {
-    return {
-    }
+    return {}
   },
   methods: {}
 }
 </script>
 
-<style lang='less' scoped>
-.inner-text{
-    background-color: var(--bg-color);
-    color: var(--text-color);
-  }
+<style lang="scss" scoped>
+.inner-text {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
 </style>

@@ -5,7 +5,7 @@ let placeholder
 let listenAction
 
 export default {
-  inserted: function(el, binding) {
+  inserted: function (el, binding) {
     const elStyle = el.style
     const params = binding.value || {}
     const stickyTop = params.stickyTop || 0
@@ -76,14 +76,13 @@ export default {
 
     on(window, 'scroll', listenAction)
   },
-  update: function(el, binding) {
+  update: function (el, binding) {
     const params = binding.value || {}
     const oldParams = binding.oldValue || {}
 
-    if (
-      params.stickyTop === oldParams.stickyTop &&
-			params.zIndex === oldParams.zIndex
-    ) { return }
+    if (params.stickyTop === oldParams.stickyTop && params.zIndex === oldParams.zIndex) {
+      return
+    }
 
     const stickyTop = params.stickyTop || 0
     const zIndex = params.zIndex || 1000
@@ -99,7 +98,7 @@ export default {
     el.style.zIndex = zIndex
     placeholder.style.height = `${elHeight + stickyTop}px`
   },
-  unbind: function(el, binding) {
+  unbind: function (el, binding) {
     off(window, 'scroll', listenAction)
   },
   install(Vue) {

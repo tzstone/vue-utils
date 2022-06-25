@@ -1,20 +1,15 @@
 <template>
-  <div>
-    i am comb
-  </div>
+  <div>i am comb</div>
 </template>
 
 <script>
 export default {
   name: 'Comb',
   data() {
-    return {
-    }
+    return {}
   },
   methods: {}
 }
 </script>
 
-<style lang='less' scoped>
-
-</style>
+<style lang="scss" scoped></style>

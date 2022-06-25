@@ -1,9 +1,17 @@
+interface Thread extends Worker {
+  id: number
+  busy: boolean
+  taskMap: any
+}
+
 export class ThreadPool {
-  constructor(options = {}) {
-    const {
-      inspectIntervalTime = 10 * 1000,
-      maximumWorkTime = 30 * 1000,
-      maxThreadNumber } = options
+  private maxThreadNumber: number
+  private inspectIntervalTime: number
+  private maximumWorkTime: number
+  private threads: Thread[]
+
+  constructor(options: any = {}) {
+    const { inspectIntervalTime = 10 * 1000, maximumWorkTime = 30 * 1000, maxThreadNumber } = options
     this.maxThreadNumber = maxThreadNumber || window.navigator.hardwareConcurrency || 4
     this.inspectIntervalTime = inspectIntervalTime
     this.maximumWorkTime = maximumWorkTime
@@ -19,7 +27,7 @@ export class ThreadPool {
     setInterval(() => this.inspectThreads(), this.inspectIntervalTime)
   }
   createThread(i) {
-    const thread = new Worker('./worker.js', { type: 'module' })
+    const thread = new Worker('./worker.ts', { type: 'module' }) as Thread
     thread.addEventListener('message', event => {
       this.messageHandler(event, thread)
     })
@@ -50,9 +58,9 @@ export class ThreadPool {
     }
 
     switch (channel) {
-      case 'calculate':
-        var { code, data, msg } = threadData
-        var promise = thread.taskMap[taskId]
+      case 'calculate': {
+        const { code, data, msg } = threadData
+        const promise = thread.taskMap[taskId]
         if (promise) {
           if (code === 0) {
             promise.resolve(data)
@@ -63,8 +71,9 @@ export class ThreadPool {
         }
         thread.busy = false
         break
-      case 'inspection':
-        var { isWorking, workTimeElapse } = threadData
+      }
+      case 'inspection': {
+        const { isWorking, workTimeElapse } = threadData
         if (isWorking && workTimeElapse > this.maximumWorkTime) {
           console.log('terminate thread', thread.id)
           this.terminateZombieThread(thread)
@@ -72,6 +81,7 @@ export class ThreadPool {
           console.log('thread', thread.id, 'still alive')
         }
         break
+      }
     }
   }
   dispatchThread({ channel, data, promise }) {

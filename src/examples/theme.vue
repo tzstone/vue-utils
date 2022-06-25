@@ -38,8 +38,7 @@ export default {
 }
 </script>
 
-<style lang='less' scoped>
-.inner{
-
+<style lang="scss" scoped>
+.inner {
 }
 </style>

@@ -1,11 +1,11 @@
 import Vue from 'vue'
-import App from './App'
+import App from './App.vue'
 import { importAll, defSortImportAll } from '@/utils'
 import './styles/reset.css'
 import 'windi.css'
 
 const instanceOption = {}
-const plugins = importAll(require.context('./plugins/', false, /\.js$/), defSortImportAll)
+const plugins = importAll(require.context('./plugins/', false, /\.(ts|js)$/), defSortImportAll)
 
 plugins.forEach(m => {
   const option = m.default || m

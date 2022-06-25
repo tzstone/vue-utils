@@ -1,20 +1,15 @@
 <template>
-  <div>
-    i am coma
-  </div>
+  <div>i am coma</div>
 </template>
 
 <script>
 export default {
   name: 'Coma',
   data() {
-    return {
-    }
+    return {}
   },
   methods: {}
 }
 </script>
 
-<style lang='less' scoped>
-
-</style>
+<style lang="scss" scoped></style>

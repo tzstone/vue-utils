@@ -9,10 +9,10 @@ export default {
     return {}
   },
   methods: {
-    * longTask() {
+    async longTask() {
       let i = 0
       while (i <= 500) {
-        yield i++
+        await i++
       }
       return i
     }
@@ -20,4 +20,4 @@ export default {
 }
 </script>
 
-<style lang="less" scoped></style>
+<style lang="scss" scoped></style>

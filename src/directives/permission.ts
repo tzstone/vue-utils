@@ -8,7 +8,7 @@ export default {
       bind: (el, binding) => {
         // 触发store的get, 将当前使用自定义指令的vm作为依赖收集(Dep.target)
         // expression: "function () { vm._update(vm._render(), hydrating);}"
-        var a = store.state.permission.hasPermission
+        const a = store.state.permission.hasPermission
         console.log(a)
       },
       update: (el, binding) => {

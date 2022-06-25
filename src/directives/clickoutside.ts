@@ -2,8 +2,8 @@ import { on, off } from '@/utils/dom'
 
 const context = '@@clickoutsideContext'
 const nodeList = []
-var id = 0
-var isBinding = false
+let id = 0
+let isBinding = false
 
 const clickHandler = e => {
   console.log('clickHandler', nodeList, e)
@@ -13,8 +13,8 @@ const clickHandler = e => {
 }
 
 export default {
-  bind: function(el, binding) {
-    const handler = function(e) {
+  bind: function (el, binding) {
+    const handler = function (e) {
       if (!el.contains(e.target)) {
         el[context].callback()
       }
@@ -33,7 +33,7 @@ export default {
       isBinding = true
     }
   },
-  unbind: function(el) {
+  unbind: function (el) {
     for (let i = 0, len = nodeList.length; i < len; i++) {
       if (nodeList[i][context].id === el[context].id) {
         nodeList.splice(i, 1)
@@ -46,7 +46,7 @@ export default {
       isBinding = false
     }
   },
-  install: function(Vue) {
+  install: function (Vue) {
     Vue.directive('clickoutside', {
       bind: this.bind,
       unbind: this.unbind

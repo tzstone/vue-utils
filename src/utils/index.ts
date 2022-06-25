@@ -4,6 +4,5 @@ export * from './lang'
 export * from './dev'
 export * from './validate'
 export * from './util'
-export * from './threadPool'
-export * from './vuexMapFields'
-
+export * from './thread-pool'
+export * from './vuex-map-fields'

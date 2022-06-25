@@ -45,7 +45,7 @@ export function formatTime(date, format = 'y-M-d h:m:s') {
     w: date.getDay()
   }
 
-  return format.replace(/\w/g, (key) => {
+  return format.replace(/\w/g, key => {
     const value = obj[key]
     if (key === 'w') return ['日', '一', '二', '三', '四', '五', '六'][value]
     if (value < 10) return `0${value}`

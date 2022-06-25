@@ -23,7 +23,5 @@ export default {
       state.info = payload.info
     }
   },
-  actions: {
-
-  }
+  actions: {}
 }

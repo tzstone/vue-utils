@@ -1,12 +1,8 @@
 <template>
   <div>
-    name: <el-input v-model="info.name" />
-    address: <el-input v-model="info.address" />
-    company: <el-input v-model="info.company.name" />
-    age: <span>{{ info.age }}</span>
-    <p v-for="(t, i) in arr" :key="i">
-      name: <el-input v-model="t.name" />
-    </p>
+    name: <el-input v-model="info.name" /> address: <el-input v-model="info.address" /> company:
+    <el-input v-model="info.company.name" /> age: <span>{{ info.age }}</span>
+    <p v-for="(t, i) in arr" :key="i">name: <el-input v-model="t.name" /></p>
     <el-button @click="addProperty">addProperty</el-button>
     <el-button @click="delProperty">delProperty</el-button>
     <el-button @click="changeObject">changeObject</el-button>
@@ -22,12 +18,11 @@ import { mapFields } from '@/utils'
 
 export default {
   data() {
-    return {
-    }
+    return {}
   },
   watch: {
     info: {
-      handler: function() {
+      handler: function () {
         console.log('component form info change')
       },
       deep: true
@@ -46,9 +41,7 @@ export default {
     // 对象引用改变 ok
     // unwatch对旧监听的影响 ok(不会影响)
   },
-  mounted() {
-
-  },
+  mounted() {},
   methods: {
     changeObject() {
       this.info = {
@@ -75,4 +68,3 @@ export default {
   }
 }
 </script>
-

@@ -7,7 +7,5 @@ export default {
       state.count++
     }
   },
-  actions: {
-
-  }
+  actions: {}
 }

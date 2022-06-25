@@ -7,7 +7,5 @@ export default {
       state.hasPermission = !state.hasPermission
     }
   },
-  actions: {
-
-  }
+  actions: {}
 }

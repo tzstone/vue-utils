@@ -13,14 +13,13 @@
 export default {
   name: '',
   data() {
-    return {
-    }
+    return {}
   },
   methods: {}
 }
 </script>
 
-<style lang='less' scoped>
+<style lang="scss" scoped>
 .btn {
   @apply bg-green-300 text-white;
 }

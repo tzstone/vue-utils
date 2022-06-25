@@ -4,9 +4,7 @@
       router:
       <router-link v-for="(r, i) in routes" :key="i" :to="r.path">{{ r.name }}</router-link>
     </div>
-    <div class="item">
-      filter: {{ 2.1234 | toFixed }}
-    </div>
+    <div class="item">filter: {{ 2.1234 | toFixed }}</div>
     <div class="item">
       global component:
       <Coma />
@@ -14,8 +12,8 @@
     </div>
     <div class="item">
       icon:
-      <svg-icon icon-class="chart" style="margin-right:5px;font-size:21px;" />
-      <svg-icon icon-class="email" style="color:red;" />
+      <svg-icon icon-class="chart" style="margin-right: 5px; font-size: 21px" />
+      <svg-icon icon-class="email" style="color: red" />
     </div>
     <div class="item">
       store: count: {{ $store.getters.count }}
@@ -44,7 +42,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang='less'>
+<style scoped lang="scss">
 .home {
   padding: 30px;
   .item {

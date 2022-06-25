@@ -3,7 +3,7 @@ import { attr } from '@/utils/dom'
 export default {
   install(Vue) {
     Vue.directive('keyboard', {
-      bind: function(el, binding) {
+      bind: function (el, binding) {
         switch (binding.value) {
           case 'number':
             attr(el, 'type', 'number')

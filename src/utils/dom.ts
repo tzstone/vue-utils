@@ -1,4 +1,4 @@
-var supportsPassive = false
+let supportsPassive = false
 /* eslint-disable */
 try {
   var opts = {}
@@ -11,7 +11,7 @@ try {
 } catch (e) {}
 /* eslint-enable */
 
-const trim = function(string) {
+const trim = function (string) {
   return (string || '').replace(/^[\s\uFEFF]+|[\s\uFEFF]+$/g, '')
 }
 
@@ -20,42 +20,35 @@ export function attr(el, prop, value) {
   else return el.getAttribute(prop)
 }
 
-export const on = (function() {
+export const on = (function () {
   if (document.addEventListener) {
     // passive=true, 事件处理程序不会调用preventDefault
-    return function(el, event, handler, passive = true, capture = false) {
-      el.addEventListener(
-        event,
-        handler,
-        supportsPassive ? { capture: capture, passive: passive } : capture
-      )
+    return function (el, event, handler, passive = true, capture = false) {
+      el.addEventListener(event, handler, supportsPassive ? { capture: capture, passive: passive } : capture)
     }
   } else {
-    return function(el, event, handler) {
+    return function (el, event, handler) {
       el.attachEvent('on' + event, handler)
     }
   }
 })()
 
-export const off = (function() {
+export const off = (function () {
   if (document.addEventListener) {
-    return function(el, event, handler, passive = true, capture = false) {
-      el.removeEventListener(
-        event,
-        handler,
-        supportsPassive ? { capture: capture, passive: passive } : capture)
+    return function (el, event, handler, passive = true, capture = false) {
+      el.removeEventListener(event, handler, supportsPassive ? { capture: capture, passive: passive } : capture)
     }
   } else {
-    return function(el, event, handler) {
+    return function (el, event, handler) {
       el.detachEvent('on' + event, handler)
     }
   }
 })()
 
-export const once = function(el, event, fn, passive = true, capture = false) {
-  var listener = function() {
+export const once = function (el, event, fn, passive = true, capture = false) {
+  const listener = function (...arg) {
     if (fn) {
-      fn.apply(this, arguments)
+      fn.apply(this, arg)
     }
     off(el, event, listener, passive, capture)
   }
@@ -64,7 +57,9 @@ export const once = function(el, event, fn, passive = true, capture = false) {
 
 export function hasClass(el, cls) {
   if (!el || !cls) return false
-  if (cls.indexOf(' ') !== -1) throw new Error('className should not contain space.')
+  if (cls.indexOf(' ') !== -1) {
+    throw new Error('className should not contain space.')
+  }
   if (el.classList) {
     return el.classList.contains(cls)
   } else {
@@ -74,11 +69,11 @@ export function hasClass(el, cls) {
 
 export function addClass(el, cls) {
   if (!el) return
-  var curClass = el.className
-  var classes = (cls || '').split(' ')
+  let curClass = el.className
+  const classes = (cls || '').split(' ')
 
-  for (var i = 0, j = classes.length; i < j; i++) {
-    var clsName = classes[i]
+  for (let i = 0, j = classes.length; i < j; i++) {
+    const clsName = classes[i]
     if (!clsName) continue
 
     if (el.classList) {
@@ -96,11 +91,11 @@ export function addClass(el, cls) {
 
 export function removeClass(el, cls) {
   if (!el || !cls) return
-  var classes = cls.split(' ')
-  var curClass = ' ' + el.className + ' '
+  const classes = cls.split(' ')
+  let curClass = ' ' + el.className + ' '
 
-  for (var i = 0, j = classes.length; i < j; i++) {
-    var clsName = classes[i]
+  for (let i = 0, j = classes.length; i < j; i++) {
+    const clsName = classes[i]
     if (!clsName) continue
 
     if (el.classList) {
@@ -134,10 +129,7 @@ export function getScrollLeft(ele) {
 
 export function getScrollHeight(ele) {
   return ele === document.body
-    ? Math.max(
-      document.documentElement.scrollHeight,
-      document.body.scrollHeight
-    )
+    ? Math.max(document.documentElement.scrollHeight, document.body.scrollHeight)
     : ele.scrollHeight
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <div id="chartbox" style="height:300px;width:300px" />
+  <div id="chartbox" style="height: 300px; width: 300px" />
 </template>
 
 <script>
@@ -17,8 +17,8 @@ export default {
       return {
         title: {
           text: 'ECharts 入门示例',
-          'textStyle': {
-            'color': this.styleObj['--text-color']
+          textStyle: {
+            color: this.styleObj['--text-color']
           }
         },
         tooltip: {},
@@ -41,7 +41,7 @@ export default {
   },
   watch: {
     styleObj: {
-      handler: function() {
+      handler: function () {
         this.myChart.setOption(this.option)
       },
       deep: true
@@ -56,6 +56,4 @@ export default {
 }
 </script>
 
-<style lang='less' scoped>
-
-</style>
+<style lang="scss" scoped></style>
