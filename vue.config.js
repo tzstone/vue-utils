@@ -7,22 +7,18 @@ function resolve(dir) {
 
 module.exports = {
   productionSourceMap: false,
+  runtimeCompiler: true,
   configureWebpack: {
     resolve: {
       alias: {
         '@': path.resolve(__dirname, 'src')
       }
     },
-    plugins: [
-      new WorkerPlugin()
-    ]
+    plugins: [new WorkerPlugin()]
   },
   chainWebpack(config) {
     // set svg-sprite-loader
-    config.module
-      .rule('svg')
-      .exclude.add(resolve('src/assets/svg'))
-      .end()
+    config.module.rule('svg').exclude.add(resolve('src/assets/svg')).end()
     config.module
       .rule('icons')
       .test(/\.svg$/)
