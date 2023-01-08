@@ -21,9 +21,15 @@ export default {
     }
   },
   mounted() {
-    this.$set(this.context, 'name', '')
-    this.$set(this.context, 'age', '')
-    this.$set(this.context, 'address', '')
+    // watch有效
+    // this.$set(this.context, 'name', '')
+    // this.$set(this.context, 'age', '')
+    // this.$set(this.context, 'address', '')
+
+    // watch无效
+    // this.context.name = ''
+    // this.context.age = ''
+    // this.context.address = ''
 
     this.$watch(
       function () {
@@ -40,6 +46,11 @@ export default {
         console.log('trigger watcher', val)
       }
     )
+
+    // watch有效
+    this.$set(this.context, 'name', '')
+    this.$set(this.context, 'age', '')
+    this.$set(this.context, 'address', '')
   },
   methods: {
     onChangeName() {
