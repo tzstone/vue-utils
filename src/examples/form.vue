@@ -1,5 +1,6 @@
 <template>
   <div>
+    <button @click="emit">emit</button>
     name: <el-input v-model="info.name" /> address: <el-input v-model="info.address" /> company:
     <el-input v-model="info.company.name" /> age: <span>{{ info.age }}</span>
     <p v-for="(t, i) in arr" :key="i">name: <el-input v-model="t.name" /></p>
@@ -29,6 +30,7 @@ export default {
     }
   },
   computed: {
+    // TODO: 计算属性监听 if
     ...mapFields('form', ['arr', 'info'])
 
     // 普通值 ok
@@ -43,6 +45,9 @@ export default {
   },
   mounted() {},
   methods: {
+    emit() {
+      this.$eventBus.$emit('test', 'from form')
+    },
     changeObject() {
       this.info = {
         name: 1,
