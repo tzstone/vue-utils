@@ -22,7 +22,8 @@ plugins.forEach(m => {
 })
 
 Vue.config.productionTip = false
-
+import eventBus from './eventBus'
+Vue.use(eventBus)
 /* eslint-disable no-new */
 new Vue({
   ...instanceOption,

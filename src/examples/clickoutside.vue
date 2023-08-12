@@ -1,5 +1,7 @@
 <template>
   <div>
+    <button @click="back">back</button>
+    <button @click="emit">emit</button>
     <div>
       <div v-show="showMask1" class="mask1" />
       <div v-clickoutside="clickoutside1" class="dialog1">click dialog1</div>
@@ -9,6 +11,8 @@
       <div v-show="showMask2" class="mask2" />
       <div v-clickoutside="clickoutside2" class="dialog2">click dialog2</div>
     </div>
+
+    <button @click="reRoute">reroute</button>
   </div>
 </template>
 
@@ -22,7 +26,23 @@ export default {
       showMask2: true
     }
   },
+  mounted() {
+    this.$eventBus.$on(['test', 'test1'], a => {
+      debugger
+    })
+  },
+  destroyed() {
+    debugger
+  },
   methods: {
+    emit() {
+      this.$eventBus.$emit('test', 111)
+    },
+    back() {
+      this.$router.push({
+        path: '/form'
+      })
+    },
     clickoutside1() {
       this.showMask1 = false
       emitter.emit(EmitterEvents.CLICK_OUTSIDE, { target: 1 })
@@ -30,6 +50,14 @@ export default {
     clickoutside2() {
       this.showMask2 = false
       emitter.emit(EmitterEvents.CLICK_OUTSIDE, { target: 2 })
+    },
+    reRoute() {
+      this.$router.push({
+        path: '/clickoutside',
+        query: {
+          t: Date.now()
+        }
+      })
     }
   }
 }
