@@ -2,10 +2,7 @@ export default {
   install(Vue, options) {
     const eventBus = new Vue()
 
-    const $off = eventBus.$off.bind(eventBus)
-    const $emit = eventBus.$emit.bind(eventBus)
-    const $once = eventBus.$once.bind(eventBus)
-    const $on = function (event, callback) {
+    const addEvent = function (event, callback) {
       if (!this._event_bus_map_) {
         // event可为数组
         this._event_bus_map_ = new Map()
@@ -20,7 +17,17 @@ export default {
       }
 
       this._event_bus_map_.set(event, callback)
+    }
 
+    const $off = eventBus.$off.bind(eventBus)
+    const $emit = eventBus.$emit.bind(eventBus)
+
+    const $once = function (event, callback) {
+      addEvent.call(this, event, callback)
+      eventBus.$once(event, callback)
+    }
+    const $on = function (event, callback) {
+      addEvent.call(this, event, callback)
       eventBus.$on(event, callback)
     }
 
@@ -28,9 +35,9 @@ export default {
       get() {
         return {
           $on: $on.bind(this),
+          $once: $once.bind(this),
           $off,
-          $emit,
-          $once
+          $emit
         }
       }
     })

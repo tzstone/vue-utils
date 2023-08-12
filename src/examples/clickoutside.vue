@@ -2,6 +2,8 @@
   <div>
     <button @click="back">back</button>
     <button @click="emit">emit</button>
+    <button @click="off">off</button>
+
     <div>
       <div v-show="showMask1" class="mask1" />
       <div v-clickoutside="clickoutside1" class="dialog1">click dialog1</div>
@@ -35,6 +37,9 @@ export default {
     debugger
   },
   methods: {
+    off() {
+      this.$eventBus.$off('test')
+    },
     emit() {
       this.$eventBus.$emit('test', 111)
     },
