@@ -1,6 +1,7 @@
 <template>
   <div>
     组件内多语言配置
+    <p>{{ $t('name') }}</p>
     <p>{{ $t('hello') }}</p>
   </div>
 </template>
@@ -13,8 +14,8 @@ export default {
   },
   i18n: {
     messages: {
-      // en: { hello: 'i18n hello' },
-      // zh: { hello: 'i18n 你好' }
+      en: { name: 'name' },
+      zh: { name: '姓名' }
     }
   },
   mounted() {
@@ -25,7 +26,8 @@ export default {
     }
     setTimeout(() => {
       Object.entries(messages).forEach(([locale, message]) => {
-        this.$i18n.setLocaleMessage(locale, message)
+        const curMessage = this.$i18n.getLocaleMessage(locale)
+        this.$i18n.setLocaleMessage(locale, { ...curMessage, ...message })
       })
     }, 500)
   },
