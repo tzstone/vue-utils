@@ -19,9 +19,6 @@ export default {
       this._event_bus_map_.set(event, callback)
     }
 
-    const $off = eventBus.$off.bind(eventBus)
-    const $emit = eventBus.$emit.bind(eventBus)
-
     const $once = function (event, callback) {
       addEvent.call(this, event, callback)
       eventBus.$once(event, callback)
@@ -30,6 +27,9 @@ export default {
       addEvent.call(this, event, callback)
       eventBus.$on(event, callback)
     }
+
+    const $off = eventBus.$off.bind(eventBus)
+    const $emit = eventBus.$emit.bind(eventBus)
 
     Object.defineProperty(Vue.prototype, '$eventBus', {
       get() {
