@@ -2,7 +2,7 @@ export default {
   bind: function (el: HTMLElement, binding) {
     const resizeEl = document.createElement('div')
     resizeEl.style.cssText =
-      'width:6px;height:6px;position:absolute;right:0;bottom:0;z-index:999;cursor:move;background:red;'
+      'width:6px;height:6px;position:absolute;right:0;bottom:0;z-index:999;cursor:se-resize;background:red;'
 
     resizeEl.onmousedown = (e: MouseEvent) => {
       // 记录点击位置
