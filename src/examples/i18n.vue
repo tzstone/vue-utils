@@ -26,8 +26,7 @@ export default {
     }
     setTimeout(() => {
       Object.entries(messages).forEach(([locale, message]) => {
-        const curMessage = this.$i18n.getLocaleMessage(locale)
-        this.$i18n.setLocaleMessage(locale, { ...curMessage, ...message })
+        this.$i18n.mergeLocaleMessage(locale, message)
       })
     }, 500)
   },
