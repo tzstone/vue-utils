@@ -1,4 +1,3 @@
-/* eslint-disable */
 function calculate(data) {
   return data.reduce((sum, t) => {
     sum += t
