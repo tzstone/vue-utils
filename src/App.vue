@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="app">
     切换语言:
     <el-select v-model="$root.$i18n.locale" placeholder="请选择">
       <el-option v-for="item in langs" :key="item.value" :label="item.label" :value="item.value" />
@@ -46,4 +46,22 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+#app {
+  --color: blue;
+}
+.app {
+  --color: green;
+}
+div {
+  --color: red;
+}
+@media screen and (min-width: 768px) {
+  .app {
+    --color: yellow;
+  }
+}
+div#app {
+  color: var(--color);
+}
+</style>
