@@ -1,5 +1,5 @@
 /**
- * 请求顺序: 取消
+ * 请求防抖
  * 请求合并
  * 节流: 队列
  * 缓存
@@ -8,18 +8,50 @@
 import axios from 'axios'
 import { createDefer } from './util'
 
-type Adapter = (config, next: () => Promise<any>) => Promise<any>
+type Adapter = (config, next?: () => Promise<any>) => Promise<any>
 
 export function generateReqKey(config) {
   const { method, url, params, data } = config
   return [method, url, JSON.stringify(params), JSON.stringify(data)].join('&')
 }
 
-// const keepOrderAdapter = (config, next) => {}
-// const cacheAdapter = (config, next) => {}
+const debounceAdapterEnhancer = (): Adapter => {
+  const debounceMap = new Map()
+
+  return async (config, next) => {
+    const { _requestId, _cancelable } = config
+    if (!_cancelable || !_requestId) return next()
+
+    if (debounceMap.has(_requestId)) {
+      const oldController = debounceMap.get(_requestId)
+      oldController.abort()
+      debounceMap.delete(_requestId)
+    }
+
+    const controller = new AbortController()
+    debounceMap.set(_requestId, controller)
+    config.signal = controller.signal
+
+    try {
+      const result = await next()
+      return Promise.resolve(result)
+    } catch (e) {
+      return Promise.reject(e)
+    } finally {
+      debounceMap.delete(_requestId)
+      console.log('debounceMap', debounceMap)
+    }
+  }
+}
+
+// const cacheAdapterEnhancer = (): Adapter => {
+//   return async (config, next) => {
+//     //
+//   }
+// }
 
 const limitAdapterEnhancer = (): Adapter => {
-  const maxLimit = 1 // 最大并发数
+  const maxLimit = 6 // 最大并发数
   const requestQueue = [] // 请求队列
   let currentConcurrent = 0 // 当前并发数
 
@@ -55,7 +87,7 @@ const limitAdapterEnhancer = (): Adapter => {
   }
 }
 
-const adapters = [limitAdapterEnhancer(), axios.defaults.adapter]
+const adapters = [debounceAdapterEnhancer(), limitAdapterEnhancer(), axios.defaults.adapter]
 
 export function adapterHandler(config) {
   return dispatch(0)

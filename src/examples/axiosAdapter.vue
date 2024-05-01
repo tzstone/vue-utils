@@ -1,5 +1,7 @@
 <template>
-  <div></div>
+  <div>
+    <el-button type="primary" size="small" @click="start">start</el-button>
+  </div>
 </template>
 
 <script>
@@ -9,23 +11,29 @@ export default {
   data() {
     return {}
   },
-  mounted() {
-    this.start()
-  },
+  mounted() {},
   methods: {
     start() {
+      const _requestId = '123456789'
       for (let i = 0; i < 30; i++) {
-        if (i === 10) {
-          this.request('https://mock.apifox.com/m1/4426965-4072270-default/test1').catch(err => {
+        if (i >= 3 && i < 6) {
+          this.request(`https://mock.apifox.com/m1/4426965-4072270-default/test?i=${i}`, {
+            _requestId,
+            _cancelable: true
+          }).catch(err => {
+            console.error(err)
+          })
+        } else if (i === 10) {
+          this.request(`https://mock.apifox.com/m1/4426965-4072270-default/test1?i=${i}`).catch(err => {
             console.error(err)
           })
         } else {
-          this.request()
+          this.request(`https://mock.apifox.com/m1/4426965-4072270-default/test?i=${i}`)
         }
       }
     },
-    request(url = 'https://mock.apifox.com/m1/4426965-4072270-default/test') {
-      return enhanceHttp.get(url)
+    request(url, config = {}) {
+      return enhanceHttp.get(url, config)
     }
   }
 }
