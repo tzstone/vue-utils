@@ -1,7 +1,7 @@
 /**
  * 请求防抖
  * 请求合并
- * 节流: 队列
+ * 限流
  * 缓存
  * real http
  */
@@ -15,6 +15,7 @@ export function generateReqKey(config) {
   return [method, url, JSON.stringify(params), JSON.stringify(data)].join('&')
 }
 
+// 请求防抖, 基于_requestId
 const debounceAdapterEnhancer = (): Adapter => {
   const debounceMap = new Map()
 
@@ -50,6 +51,7 @@ const debounceAdapterEnhancer = (): Adapter => {
 //   }
 // }
 
+// 请求限流
 const limitAdapterEnhancer = (): Adapter => {
   const maxLimit = 6 // 最大并发数
   const requestQueue = [] // 请求队列
