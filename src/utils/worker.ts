@@ -1,4 +1,4 @@
-/* eslint-disable */ 
+/* eslint-disable */
 function calculate(data) {
   return data.reduce((sum, t) => {
     sum += t
@@ -10,7 +10,7 @@ let isWorking = false
 let startWorkingTime = 0
 let tasks = []
 
-addEventListener('message', (event) => {
+addEventListener('message', event => {
   const { channel, data, taskId } = event.data
   let result
   switch (channel) {
@@ -42,12 +42,12 @@ addEventListener('message', (event) => {
         threadCode: 0,
         channel: 'inspection',
         threadData: {
-            isWorking,
-            startWorkingTime,
-            workTimeElapse: isWorking ? (Date.now() - startWorkingTime) : 0,
-            tasks
+          isWorking,
+          startWorkingTime,
+          workTimeElapse: isWorking ? Date.now() - startWorkingTime : 0,
+          tasks
         }
       })
-    break
+      break
   }
 })
