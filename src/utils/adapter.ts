@@ -59,14 +59,15 @@ const mergeAdapterEnhancer = (): Adapter => {
   const mergeReq = (config, next) => {
     const { _mergeKeys, params, url } = config
     const [_reqKey] = _mergeKeys
+    const keys = params[_reqKey].split(',')
 
-    config['_rawReqKey_'] = params[_reqKey]
+    config['_rawReqKeys_'] = keys
 
     if (!mergeMap[url]) {
       const { promise, resolve } = createDefer()
 
       mergeMap[url] = {
-        keys: params[_reqKey].split(','),
+        keys,
         promise,
         next // 缓存首次的next
       }
@@ -75,13 +76,15 @@ const mergeAdapterEnhancer = (): Adapter => {
         const { keys, next } = mergeMap[url]
         // 提前清理, 避免后续真正请求期间相同的url错误地进到mergeMap
         delete mergeMap[url]
+
         // 参数合并
         config.params[_reqKey] = keys.join(',')
+
         // 返回首次的next
         resolve({ nextPromise: next() })
       }, duration)
     } else {
-      mergeMap[url].keys = Array.from(new Set([...mergeMap[url].keys, ...params[_reqKey].split(',')]))
+      mergeMap[url].keys = Array.from(new Set([...mergeMap[url].keys, ...keys]))
     }
 
     return mergeMap[url].promise()
@@ -115,7 +118,7 @@ const mergeAdapterEnhancer = (): Adapter => {
       if (!Array.isArray(resData.data)) {
         chunk = resData.data
       } else {
-        chunk = resData.data.filter(item => config['_rawReqKey_'].split(',').includes(item[_resKey || _reqKey]))
+        chunk = resData.data.filter(item => config['_rawReqKeys_'].includes(item[_resKey || _reqKey]))
       }
 
       return Promise.resolve({ ...res, data: JSON.stringify({ ...resData, data: chunk }) })
