@@ -40,8 +40,7 @@ export default {
         this.request(`https://mock.apifox.com/m1/4426965-4072270-default/query`, {
           params: { ids: `id${i}` },
           _mergeable: true,
-          _reqKey: 'ids',
-          _resKey: 'id'
+          _mergeKeys: ['ids', 'id']
         }).then(res => {
           console.log('merge i', i, res)
         })
@@ -51,8 +50,7 @@ export default {
         this.request(`https://mock.apifox.com/m1/4426965-4072270-default/query1`, {
           params: { ids: `id${i}` },
           _mergeable: true,
-          _reqKey: 'ids',
-          _resKey: 'id'
+          _mergeKeys: ['ids', 'id']
         }).then(res => {
           console.log('merge1 i', i, res)
         })

@@ -57,8 +57,10 @@ const mergeAdapterEnhancer = (): Adapter => {
   const duration = 100
 
   const mergeReq = (config, next) => {
-    const { _reqKey, params, url } = config
-    config['_rawReqKey'] = params[_reqKey]
+    const { _mergeKeys, params, url } = config
+    const [_reqKey] = _mergeKeys
+
+    config['_rawReqKey_'] = params[_reqKey]
 
     if (!mergeMap[url]) {
       const { promise, resolve } = createDefer()
@@ -86,7 +88,8 @@ const mergeAdapterEnhancer = (): Adapter => {
   }
 
   return async (config, next) => {
-    const { _mergeable, _reqKey, _resKey, method, params } = config
+    const { _mergeable, _mergeKeys = [], method, params } = config
+    const [_reqKey, _resKey] = _mergeKeys
 
     const validReqKey = () => {
       if (!_reqKey) return false
@@ -112,7 +115,7 @@ const mergeAdapterEnhancer = (): Adapter => {
       if (!Array.isArray(resData.data)) {
         chunk = resData.data
       } else {
-        chunk = resData.data.filter(item => config['_rawReqKey'].split(',').includes(item[_resKey || _reqKey]))
+        chunk = resData.data.filter(item => config['_rawReqKey_'].split(',').includes(item[_resKey || _reqKey]))
       }
 
       return Promise.resolve({ ...res, data: JSON.stringify({ ...resData, data: chunk }) })
