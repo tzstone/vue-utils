@@ -34,13 +34,89 @@ const debounceAdapterEnhancer = (): Adapter => {
     config.signal = controller.signal
 
     try {
-      const result = await next()
-      return Promise.resolve(result)
+      const res = await next()
+      return Promise.resolve(res)
     } catch (e) {
       return Promise.reject(e)
     } finally {
       debounceMap.delete(_requestId)
       console.log('debounceMap', debounceMap)
+    }
+  }
+}
+
+// 请求合并
+const mergeAdapterEnhancer = (): Adapter => {
+  const mergeMap: {
+    [url: string]: {
+      keys: string[]
+      promise: () => Promise<any>
+      next: () => Promise<any>
+    }
+  } = {}
+  const duration = 100
+
+  const mergeReq = (config, next) => {
+    const { _reqKey, params, url } = config
+    config['_rawReqKey'] = params[_reqKey]
+
+    if (!mergeMap[url]) {
+      const { promise, resolve } = createDefer()
+
+      mergeMap[url] = {
+        keys: params[_reqKey].split(','),
+        promise,
+        next // 缓存首次的next
+      }
+
+      setTimeout(() => {
+        const { keys, next } = mergeMap[url]
+        delete mergeMap[url]
+        // 参数合并
+        config.params[_reqKey] = keys.join(',')
+        // 返回首次的next
+        resolve({ nextPromise: next() })
+      }, duration)
+    } else {
+      mergeMap[url].keys = Array.from(new Set([...mergeMap[url].keys, ...params[_reqKey].split(',')]))
+    }
+
+    return mergeMap[url].promise()
+  }
+
+  return async (config, next) => {
+    const { _mergeable, _reqKey, _resKey, method, params } = config
+
+    const validReqKey = () => {
+      if (!_reqKey) return false
+      if (method === 'get') return _reqKey in (params || {})
+      return false
+    }
+
+    if (!_mergeable || !validReqKey()) return next()
+
+    try {
+      const { nextPromise } = await mergeReq(config, next)
+      const res = await nextPromise
+
+      let resData
+      try {
+        resData = JSON.parse(res.data)
+      } catch (e) {
+        return Promise.resolve(res)
+      }
+
+      let chunk
+      // 异常情况保留原始值
+      if (!Array.isArray(resData.data)) {
+        chunk = resData.data
+      } else {
+        chunk = resData.data.filter(item => config['_rawReqKey'].split(',').includes(item[_resKey || _reqKey]))
+      }
+
+      return Promise.resolve({ ...res, data: JSON.stringify({ ...resData, data: chunk }) })
+    } catch (e) {
+      return Promise.reject(e)
     }
   }
 }
@@ -78,8 +154,8 @@ const limitAdapterEnhancer = (): Adapter => {
     try {
       currentConcurrent++
       // 需await next(), 方可进入finally减少当前并发数
-      const result = await next()
-      return Promise.resolve(result)
+      const res = await next()
+      return Promise.resolve(res)
     } catch (e) {
       return Promise.reject(e)
     } finally {
@@ -89,7 +165,7 @@ const limitAdapterEnhancer = (): Adapter => {
   }
 }
 
-const adapters = [debounceAdapterEnhancer(), limitAdapterEnhancer(), axios.defaults.adapter]
+const adapters = [debounceAdapterEnhancer(), mergeAdapterEnhancer(), limitAdapterEnhancer(), axios.defaults.adapter]
 
 export function adapterHandler(config) {
   return dispatch(0)
@@ -103,7 +179,47 @@ export function adapterHandler(config) {
   }
 }
 
-export const enhanceHttp = axios.create({
+const enhanceHttp = axios.create({
   baseURL: '',
   adapter: adapterHandler
 })
+
+// Add a request interceptor
+enhanceHttp.interceptors.request.use(
+  function (config) {
+    // Do something before request is sent
+    return config
+  },
+  function (error) {
+    // Do something with request error
+    return Promise.reject(error)
+  }
+)
+
+// Add a response interceptor
+enhanceHttp.interceptors.response.use(
+  function (response) {
+    // Any status code that lie within the range of 2xx cause this function to trigger
+    // Do something with response data
+    return response.data
+  },
+  function (error) {
+    // Any status codes that falls outside the range of 2xx cause this function to trigger
+    // Do something with response error
+    return Promise.reject(error)
+  }
+)
+
+export default enhanceHttp
+
+// const p = new Promise((resolve, reject) => {
+//   setTimeout(() => {
+//     console.log('before resolve')
+//     resolve(1)
+//     console.log('after resolve')
+//   }, 100)
+// })
+// console.log('before then')
+// p.then(res => {
+//   console.log('then res', res)
+// })
