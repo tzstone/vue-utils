@@ -46,6 +46,17 @@ export default {
           console.log('merge i', i, res)
         })
       }
+
+      for (let i = 1; i < 3; i++) {
+        this.request(`https://mock.apifox.com/m1/4426965-4072270-default/query1`, {
+          params: { ids: `id${i}` },
+          _mergeable: true,
+          _reqKey: 'ids',
+          _resKey: 'id'
+        }).then(res => {
+          console.log('merge1 i', i, res)
+        })
+      }
     },
     request(url, config = {}) {
       return enhanceHttp.get(url, config)

@@ -71,6 +71,7 @@ const mergeAdapterEnhancer = (): Adapter => {
 
       setTimeout(() => {
         const { keys, next } = mergeMap[url]
+        // 提前清理, 避免后续真正请求期间相同的url错误地进到mergeMap
         delete mergeMap[url]
         // 参数合并
         config.params[_reqKey] = keys.join(',')
