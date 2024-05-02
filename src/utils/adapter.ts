@@ -57,8 +57,11 @@ const mergeAdapterEnhancer = (): Adapter => {
   const duration = 100
 
   const mergeReq = (config, next) => {
-    const { _mergeKeys, params, url } = config
-    const [_reqKey] = _mergeKeys
+    const {
+      _mergeKeys: [_reqKey],
+      params,
+      url
+    } = config
     const keys = params[_reqKey].split(',')
 
     config['_rawReqKeys_'] = keys
