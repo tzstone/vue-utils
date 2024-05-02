@@ -46,6 +46,24 @@ export default {
         })
       }
 
+      // --------- 多id start -----------------
+      // this.request(`https://mock.apifox.com/m1/4426965-4072270-default/query`, {
+      //   params: { ids: `id1,id2` },
+      //   _mergeable: true,
+      //   _mergeKeys: ['ids', 'id']
+      // }).then(res => {
+      //   console.log('merge i', res)
+      // })
+
+      // this.request(`https://mock.apifox.com/m1/4426965-4072270-default/query`, {
+      //   params: { ids: `id3` },
+      //   _mergeable: true,
+      //   _mergeKeys: ['ids', 'id']
+      // }).then(res => {
+      //   console.log('merge i', res)
+      // })
+      // --------- 多id end -----------------
+
       for (let i = 1; i < 3; i++) {
         this.request(`https://mock.apifox.com/m1/4426965-4072270-default/query1`, {
           params: { ids: `id${i}` },
