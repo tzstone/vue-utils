@@ -170,8 +170,14 @@ function generateReqKey(config) {
   return [method, url, JSON.stringify(params), JSON.stringify(data)].join('&')
 }
 
-const MemoryCache = {
-  data: {},
+class MemoryCache {
+  constructor() {
+    // 定时清理失效缓存
+    setInterval(() => {
+      this.flush()
+    }, 5 * 60 * 1e3) // 5mins
+  }
+  data = {}
   set(key, value, maxAge) {
     // 保存数据
     this.data[key] = {
@@ -179,7 +185,7 @@ const MemoryCache = {
       value,
       now: Date.now()
     }
-  },
+  }
   get(key) {
     // 从缓存中获取指定 key 对应的值。
     const cachedItem = this.data[key]
@@ -187,19 +193,28 @@ const MemoryCache = {
     const isExpired = Date.now() - cachedItem.now > cachedItem.maxAge
     isExpired && this.delete(key)
     return isExpired ? null : cachedItem.value
-  },
+  }
   delete(key) {
     // 从缓存中删除指定 key 对应的值。
     return delete this.data[key]
-  },
+  }
   clear() {
     // 清空已缓存的数据。
     this.data = {}
   }
+  flush() {
+    Object.entries(this.data).forEach(([key, cachedItem]: [string, any]) => {
+      const isExpired = Date.now() - cachedItem.now > cachedItem.maxAge
+      if (isExpired) {
+        console.log('flush expired key', key)
+        this.delete(key)
+      }
+    })
+  }
 }
 
 const cacheAdapterEnhancer = (): Adapter => {
-  const cache = MemoryCache
+  const cache = new MemoryCache()
 
   return async (config, next) => {
     const { _cache, _maxAge = 60 * 1e3, _forceUpdate, method } = config
