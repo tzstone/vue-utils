@@ -2,6 +2,8 @@
   <div>
     <el-button type="primary" size="small" @click="start">start</el-button>
     <el-button type="primary" size="small" @click="merge">merge</el-button>
+    <el-button type="primary" size="small" @click="cache">cache</el-button>
+    <el-button type="primary" size="small" @click="forceUpdate">forceUpdate</el-button>
   </div>
 </template>
 
@@ -73,6 +75,25 @@ export default {
           console.log('merge1 i', i, res)
         })
       }
+    },
+    cache() {
+      this.request(`https://mock.apifox.com/m1/4426965-4072270-default/query`, {
+        params: { ids: `id1,id2` },
+        _cache: true,
+        _maxAge: 60 * 1e3
+      }).then(res => {
+        console.log('cache', res)
+      })
+    },
+    forceUpdate() {
+      this.request(`https://mock.apifox.com/m1/4426965-4072270-default/query`, {
+        params: { ids: `id1,id2` },
+        _cache: true,
+        _forceUpdate: true,
+        _maxAge: 60 * 1e3
+      }).then(res => {
+        console.log('forceUpdate', res)
+      })
     },
     request(url, config = {}) {
       return enhanceHttp.get(url, config)

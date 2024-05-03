@@ -10,11 +10,6 @@ import { createDefer } from './util'
 
 type Adapter = (config, next?: () => Promise<any>) => Promise<any>
 
-export function generateReqKey(config) {
-  const { method, url, params, data } = config
-  return [method, url, JSON.stringify(params), JSON.stringify(data)].join('&')
-}
-
 // 请求防抖, 基于_requestId
 const debounceAdapterEnhancer = (): Adapter => {
   const debounceMap = new Map()
@@ -24,8 +19,8 @@ const debounceAdapterEnhancer = (): Adapter => {
     if (!_cancelable || !_requestId) return next()
 
     if (debounceMap.has(_requestId)) {
-      const oldController = debounceMap.get(_requestId)
-      oldController.abort()
+      const cacheController = debounceMap.get(_requestId)
+      cacheController.abort()
       debounceMap.delete(_requestId)
     }
 
@@ -132,12 +127,6 @@ const mergeAdapterEnhancer = (): Adapter => {
   }
 }
 
-// const cacheAdapterEnhancer = (): Adapter => {
-//   return async (config, next) => {
-//     //
-//   }
-// }
-
 // 请求限流
 const limitAdapterEnhancer = (): Adapter => {
   const maxLimit = 6 // 最大并发数
@@ -176,7 +165,74 @@ const limitAdapterEnhancer = (): Adapter => {
   }
 }
 
-const adapters = [debounceAdapterEnhancer(), mergeAdapterEnhancer(), limitAdapterEnhancer(), axios.defaults.adapter]
+function generateReqKey(config) {
+  const { method, url, params, data } = config
+  return [method, url, JSON.stringify(params), JSON.stringify(data)].join('&')
+}
+
+const MemoryCache = {
+  data: {},
+  set(key, value, maxAge) {
+    // 保存数据
+    this.data[key] = {
+      maxAge: maxAge || 0,
+      value,
+      now: Date.now()
+    }
+  },
+  get(key) {
+    // 从缓存中获取指定 key 对应的值。
+    const cachedItem = this.data[key]
+    if (!cachedItem) return null
+    const isExpired = Date.now() - cachedItem.now > cachedItem.maxAge
+    isExpired && this.delete(key)
+    return isExpired ? null : cachedItem.value
+  },
+  delete(key) {
+    // 从缓存中删除指定 key 对应的值。
+    return delete this.data[key]
+  },
+  clear() {
+    // 清空已缓存的数据。
+    this.data = {}
+  }
+}
+
+const cacheAdapterEnhancer = (): Adapter => {
+  const cache = MemoryCache
+
+  return async (config, next) => {
+    const { _cache, _maxAge = 60 * 1e3, _forceUpdate, method } = config
+
+    if (!_cache || !['get', 'post'].includes(method)) return next()
+
+    const requestKey = generateReqKey(config)
+    let res = cache.get(requestKey)
+
+    if (!res || _forceUpdate) {
+      try {
+        res = await next()
+        cache.set(requestKey, res, _maxAge)
+
+        return Promise.resolve(res)
+      } catch (e) {
+        cache.delete(requestKey)
+
+        return Promise.reject(e)
+      }
+    }
+    // 使用缓存
+    return Promise.resolve(res)
+  }
+}
+
+const adapters = [
+  debounceAdapterEnhancer(),
+  mergeAdapterEnhancer(),
+  limitAdapterEnhancer(),
+  cacheAdapterEnhancer(),
+  axios.defaults.adapter
+]
 
 export function adapterHandler(config) {
   return dispatch(0)
