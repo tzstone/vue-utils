@@ -14,7 +14,6 @@ export default {
   name: '',
   data() {
     return {
-      tableInstance: null,
       lightTheme: true
     }
   },
@@ -200,11 +199,20 @@ export default {
       hover: {
         highlightMode: 'row', // cross/column/row/cell
         disableHeaderHover: true
+      },
+      tooltip: {
+        isShowOverflowTextTooltip: true
       }
     }
 
     // 创建 VTable 实例
     this.tableInstance = new VTable.ListTable(document.getElementById('tableContainer'), option)
+    this.tableInstance.updateFilterRules([
+      {
+        filterKey: '230517143221037',
+        filteredValues: ['West']
+      }
+    ])
   },
   methods: {
     updateTheme() {
