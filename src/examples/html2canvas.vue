@@ -22,7 +22,6 @@ export default {
           document.fonts.forEach(font => {
             documentClone.fonts.add(font)
           })
-          debugger
           await documentClone.fonts.ready
         }
       }).then(function (canvas) {
