@@ -109,7 +109,7 @@ const mergeAdapterEnhancer = (): Adapter => {
       try {
         resData = JSON.parse(res.data)
       } catch (e) {
-        // 支持业务数据异常
+        // TODO: 待评估 支持业务数据异常?
         return Promise.resolve(res)
       }
 
@@ -233,6 +233,7 @@ const cacheAdapterEnhancer = (): Adapter => {
         cache.set(requestKey, res, _maxAge)
 
         // 需await res, 请求异常时方可进入catch删除缓存
+        // TODO: 考虑http码正常但业务码异常
         return await res
       } catch (e) {
         cache.delete(requestKey)
