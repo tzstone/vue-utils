@@ -129,9 +129,9 @@ const mergeAdapterEnhancer = (): Adapter => {
 
 // 请求限流
 const limitAdapterEnhancer = (): Adapter => {
-  const maxLimit = 6 // 最大并发数
+  const concurrentLimit = 6 // 最大并发数
   const requestQueue = [] // 请求队列
-  let currentConcurrent = 0 // 当前并发数
+  let concurrentCount = 0 // 当前并发数
 
   const wait = () => {
     const i = createDefer()
@@ -147,19 +147,19 @@ const limitAdapterEnhancer = (): Adapter => {
 
   return async (config, next) => {
     // 超出最大并发数, 进入等待
-    if (currentConcurrent >= maxLimit) {
+    if (concurrentCount >= concurrentLimit) {
       await wait()
     }
 
     try {
-      currentConcurrent++
+      concurrentCount++
       // 需await next(), 方可进入finally减少当前并发数
       const res = await next()
       return Promise.resolve(res)
     } catch (e) {
       return Promise.reject(e)
     } finally {
-      currentConcurrent--
+      concurrentCount--
       nextReq()
     }
   }
