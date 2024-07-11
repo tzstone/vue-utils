@@ -20,18 +20,18 @@ export default {
       const _requestId = '123456789'
       for (let i = 0; i < 30; i++) {
         if (i >= 3 && i < 6) {
-          this.request(`https://mock.apifox.com/m1/4426965-4072270-default/test?i=${i}`, {
+          this.request(`https://apifoxmock.com/m1/4426965-4072270-default/test?i=${i}`, {
             _requestId,
             _cancelable: true
           }).catch(err => {
             console.error(err)
           })
         } else if (i === 10) {
-          this.request(`https://mock.apifox.com/m1/4426965-4072270-default/test1?i=${i}`).catch(err => {
+          this.request(`https://apifoxmock.com/m1/4426965-4072270-default/test1?i=${i}`).catch(err => {
             console.error(err)
           })
         } else {
-          this.request(`https://mock.apifox.com/m1/4426965-4072270-default/test?i=${i}`).then(res => {
+          this.request(`https://apifoxmock.com/m1/4426965-4072270-default/test?i=${i}`).then(res => {
             console.log('i', i, res)
           })
         }
@@ -39,7 +39,7 @@ export default {
     },
     merge() {
       for (let i = 1; i < 4; i++) {
-        this.request(`https://mock.apifox.com/m1/4426965-4072270-default/query`, {
+        this.request(`https://apifoxmock.com/m1/4426965-4072270-default/query`, {
           params: { ids: `id${i}` },
           _mergeable: true,
           _mergeKeys: ['ids', 'id']
@@ -49,7 +49,7 @@ export default {
       }
 
       // --------- 多id start -----------------
-      // this.request(`https://mock.apifox.com/m1/4426965-4072270-default/query`, {
+      // this.request(`https://apifoxmock.com/m1/4426965-4072270-default/query`, {
       //   params: { ids: `id1,id2` },
       //   _mergeable: true,
       //   _mergeKeys: ['ids', 'id']
@@ -57,7 +57,7 @@ export default {
       //   console.log('merge i', res)
       // })
 
-      // this.request(`https://mock.apifox.com/m1/4426965-4072270-default/query`, {
+      // this.request(`https://apifoxmock.com/m1/4426965-4072270-default/query`, {
       //   params: { ids: `id3` },
       //   _mergeable: true,
       //   _mergeKeys: ['ids', 'id']
@@ -67,7 +67,7 @@ export default {
       // --------- 多id end -----------------
 
       for (let i = 1; i < 3; i++) {
-        this.request(`https://mock.apifox.com/m1/4426965-4072270-default/query1`, {
+        this.request(`https://apifoxmock.com/m1/4426965-4072270-default/query1`, {
           params: { ids: `id${i}` },
           _mergeable: true,
           _mergeKeys: ['ids', 'id']
@@ -77,16 +77,18 @@ export default {
       }
     },
     cache() {
-      this.request(`https://mock.apifox.com/m1/4426965-4072270-default/query`, {
-        params: { ids: `id1,id2` },
-        _cache: true,
-        _maxAge: 60 * 1e3
-      }).then(res => {
-        console.log('cache', res)
-      })
+      for (let i = 0; i < 5; i++) {
+        this.request(`https://apifoxmock.com/m1/4426965-4072270-default/query`, {
+          params: { ids: `id1,id2` },
+          _cache: true,
+          _maxAge: 60 * 1e3
+        }).then(res => {
+          console.log('cache', res)
+        })
+      }
     },
     forceUpdate() {
-      this.request(`https://mock.apifox.com/m1/4426965-4072270-default/query`, {
+      this.request(`https://apifoxmock.com/m1/4426965-4072270-default/query`, {
         params: { ids: `id1,id2` },
         _cache: true,
         _forceUpdate: true,

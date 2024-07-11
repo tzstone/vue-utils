@@ -35,7 +35,7 @@ const debounceAdapterEnhancer = (): Adapter => {
       return Promise.reject(e)
     } finally {
       debounceMap.delete(_requestId)
-      console.log('debounceMap', debounceMap)
+      console.log('[adapter]delete debounce id', _requestId)
     }
   }
 }
@@ -109,6 +109,7 @@ const mergeAdapterEnhancer = (): Adapter => {
       try {
         resData = JSON.parse(res.data)
       } catch (e) {
+        // 支持业务数据异常
         return Promise.resolve(res)
       }
 
@@ -166,7 +167,7 @@ const limitAdapterEnhancer = (): Adapter => {
 }
 
 function generateReqKey(config) {
-  const { method, url, params, data } = config
+  const { method, url, params = {}, data = {} } = config
   return [method, url, JSON.stringify(params), JSON.stringify(data)].join('&')
 }
 
@@ -206,7 +207,7 @@ class MemoryCache {
     Object.entries(this.data).forEach(([key, cachedItem]: [string, any]) => {
       const isExpired = Date.now() - cachedItem.now > cachedItem.maxAge
       if (isExpired) {
-        console.log('flush expired key', key)
+        console.log('[adapter]flush expired key', key)
         this.delete(key)
       }
     })
@@ -226,18 +227,22 @@ const cacheAdapterEnhancer = (): Adapter => {
 
     if (!res || _forceUpdate) {
       try {
-        res = await next()
+        res = next()
+
+        // 缓存promise, 支持并发请求缓存
         cache.set(requestKey, res, _maxAge)
 
-        return Promise.resolve(res)
+        // 需await res, 请求异常时方可进入catch删除缓存
+        return await res
       } catch (e) {
         cache.delete(requestKey)
 
         return Promise.reject(e)
       }
     }
+
     // 使用缓存
-    return Promise.resolve(res)
+    return res
   }
 }
 
