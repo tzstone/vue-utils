@@ -206,7 +206,10 @@ class MemoryCache {
     const cachedItem = this.data[key]
     if (!cachedItem) return null
     const isExpired = Date.now() - cachedItem.now > cachedItem.maxAge
-    isExpired && this.delete(key)
+    if (isExpired) {
+      console.log('[adapter]expired key', key)
+      this.delete(key)
+    }
     return isExpired ? null : cachedItem.value
   }
   delete(key) {
