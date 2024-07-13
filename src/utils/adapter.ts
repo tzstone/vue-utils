@@ -7,8 +7,16 @@
  */
 import axios from 'axios'
 import { createDefer } from './util'
+import { isPlainObject } from 'lodash-es'
 
 type Adapter = (config, next?: () => Promise<any>) => Promise<any>
+
+const parseResponseData = response => {
+  if (typeof response.data === 'string' && response.data.length) {
+    return JSON.parse(response.data)
+  }
+  return response.data
+}
 
 // 请求防抖, 基于_requestId
 const debounceAdapterEnhancer = (): Adapter => {
@@ -91,7 +99,9 @@ const mergeAdapterEnhancer = (): Adapter => {
 
   return async (config, next) => {
     const { _mergeable, _mergeKeys = [], method, params } = config
-    const [_reqKey, _resKey] = _mergeKeys
+    // eslint-disable-next-line
+    let [_reqKey, _resKey] = _mergeKeys
+    if (!_resKey) _resKey = _reqKey
 
     const validReqKey = () => {
       if (!_reqKey) return false
@@ -107,9 +117,12 @@ const mergeAdapterEnhancer = (): Adapter => {
 
       let resData
       try {
-        resData = JSON.parse(res.data)
+        resData = parseResponseData(res)
+        // 业务码异常, 进入响应拦截处理
+        if (resData.code != 200) {
+          return Promise.resolve(res)
+        }
       } catch (e) {
-        // TODO: 待评估 支持业务数据异常?
         return Promise.resolve(res)
       }
 
@@ -118,10 +131,10 @@ const mergeAdapterEnhancer = (): Adapter => {
       if (!Array.isArray(resData.data)) {
         chunk = resData.data
       } else {
-        chunk = resData.data.filter(item => config['_rawReqKeys_'].includes(item[_resKey || _reqKey]))
+        chunk = resData.data.filter(item => config['_rawReqKeys_'].includes(item[_resKey]))
       }
 
-      return Promise.resolve({ ...res, data: JSON.stringify({ ...resData, data: chunk }) })
+      return Promise.resolve({ ...res, data: { ...resData, data: chunk } })
     } catch (e) {
       return Promise.reject(e)
     }
@@ -180,6 +193,7 @@ class MemoryCache {
   }
   data = {}
   set(key, value, maxAge) {
+    console.log('[adapter]set cache key', key)
     // 保存数据
     this.data[key] = {
       maxAge: maxAge || 0,
@@ -197,6 +211,7 @@ class MemoryCache {
   }
   delete(key) {
     // 从缓存中删除指定 key 对应的值。
+    console.log('[adapter]delete cache key', key)
     return delete this.data[key]
   }
   clear() {
@@ -233,8 +248,20 @@ const cacheAdapterEnhancer = (): Adapter => {
         cache.set(requestKey, res, _maxAge)
 
         // 需await res, 请求异常时方可进入catch删除缓存
-        // TODO: 考虑http码正常但业务码异常
-        return await res
+        const response = await res
+
+        try {
+          const resData = parseResponseData(response)
+          // 业务码异常
+          if (isPlainObject(resData) && resData.code != 200) {
+            cache.delete(requestKey)
+          }
+        } catch (e) {
+          console.log(e)
+          cache.delete(requestKey)
+        }
+
+        return response
       } catch (e) {
         cache.delete(requestKey)
 
@@ -287,9 +314,13 @@ enhanceHttp.interceptors.request.use(
 // Add a response interceptor
 enhanceHttp.interceptors.response.use(
   function (response) {
+    const { data } = response
+    if (data.code != 200) {
+      return Promise.reject(data)
+    }
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
-    return response.data
+    return data.data
   },
   function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger

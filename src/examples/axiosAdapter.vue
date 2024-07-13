@@ -4,6 +4,7 @@
     <el-button type="primary" size="small" @click="merge">merge</el-button>
     <el-button type="primary" size="small" @click="cache">cache</el-button>
     <el-button type="primary" size="small" @click="forceUpdate">forceUpdate</el-button>
+    <el-button type="primary" size="small" @click="interceptor">interceptor</el-button>
   </div>
 </template>
 
@@ -99,6 +100,20 @@ export default {
     },
     request(url, config = {}) {
       return enhanceHttp.get(url, config)
+    },
+    interceptor() {
+      const i = Math.floor(Math.random() * 10)
+      this.request(`https://apifoxmock.com/m1/4426965-4072270-default/test?i=${i}`, {
+        _cache: true,
+        _requestId: 3333333,
+        _cancelable: true
+      })
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.error(err)
+        })
     }
   }
 }
