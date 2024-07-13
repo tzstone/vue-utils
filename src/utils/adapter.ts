@@ -255,9 +255,15 @@ const cacheAdapterEnhancer = (): Adapter => {
 
         try {
           const resData = parseResponseData(response)
-          // 业务码异常
-          if (isPlainObject(resData) && resData.code != 200) {
-            cache.delete(requestKey)
+
+          if (isPlainObject(resData)) {
+            // 减少后续重复parse
+            response.data = resData
+
+            // 业务码异常
+            if (resData.code != 200) {
+              cache.delete(requestKey)
+            }
           }
         } catch (e) {
           console.log(e)
