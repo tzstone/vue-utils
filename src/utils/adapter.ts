@@ -186,26 +186,33 @@ function generateReqKey(config) {
 
 class MemoryCache {
   constructor() {
+    // window['cache'] = this.data
     // 定时清理失效缓存
     setInterval(() => {
       this.flush()
     }, 5 * 60 * 1e3) // 5mins
   }
-  data = {}
+  data: {
+    [cacheKey: string]: {
+      maxAge: number
+      value: any
+      createTime: number
+    }
+  } = {}
   set(key, value, maxAge) {
     console.log('[adapter]set cache key', key)
     // 保存数据
     this.data[key] = {
       maxAge: maxAge || 0,
       value,
-      now: Date.now()
+      createTime: Date.now()
     }
   }
   get(key) {
     // 从缓存中获取指定 key 对应的值。
     const cachedItem = this.data[key]
     if (!cachedItem) return null
-    const isExpired = Date.now() - cachedItem.now > cachedItem.maxAge
+    const isExpired = this._isExpired(cachedItem)
     if (isExpired) {
       console.log('[adapter]expired key', key)
       this.delete(key)
@@ -222,13 +229,16 @@ class MemoryCache {
     this.data = {}
   }
   flush() {
-    Object.entries(this.data).forEach(([key, cachedItem]: [string, any]) => {
-      const isExpired = Date.now() - cachedItem.now > cachedItem.maxAge
+    Object.entries(this.data).forEach(([key, cachedItem]) => {
+      const isExpired = this._isExpired(cachedItem)
       if (isExpired) {
         console.log('[adapter]flush expired key', key)
         this.delete(key)
       }
     })
+  }
+  _isExpired(cachedItem: { maxAge: number; createTime: number }) {
+    return Date.now() - cachedItem.createTime > cachedItem.maxAge
   }
 }
 
