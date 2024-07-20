@@ -18,11 +18,10 @@ module.exports = {
         groups: [
           'builtin', // 内置模块
           'external', // 外部模块
-          'parent', // 父节点依赖
-          'sibling', // 兄弟依赖
           'internal', // 内部引用
+          'sibling', // 兄弟依赖
+          'parent', // 父节点依赖
           'index', // index文件
-          'object',
           'type', // 类型文件
           'unknown'
         ],
@@ -39,7 +38,8 @@ module.exports = {
         // 每个分组之间换行
         'newlines-between': 'always',
         // 相同分组排列规则 按字母升序排序, 忽略大小写
-        alphabetize: { order: 'asc', caseInsensitive: true }
+        alphabetize: { order: 'asc', caseInsensitive: true },
+        warnOnUnassignedImports: false
       }
     ]
   }
