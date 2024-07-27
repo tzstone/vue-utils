@@ -1,3 +1,4 @@
+<!-- page keepalive -->
 <template>
   <div>
     page3
