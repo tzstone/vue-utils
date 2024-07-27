@@ -34,7 +34,11 @@ const router = new Router({
       if (to.meta.keepAlive) store.commit('addCachePageName', to.name)
     }
 
-    return savedPosition
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 }
+    }
   }
 })
 
