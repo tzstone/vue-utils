@@ -7,7 +7,11 @@
 
     <span>{{ $t('hello') }}</span
     ><br />
-    <router-view />
+
+    <keep-alive :include="cachePageNames">
+      <router-view v-if="$route.meta.keepAlive" :key="$route.fullPath" />
+    </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive" :key="$route.fullPath" />
   </div>
 </template>
 
@@ -27,6 +31,11 @@ export default {
           value: 'zh'
         }
       ]
+    }
+  },
+  computed: {
+    cachePageNames() {
+      return this.$store.state.common.cachePageNames
     }
   },
   watch: {
