@@ -21,9 +21,9 @@ module.exports = {
       typescript: {
         alwaysTryTypes: true
       },
-      alias: true,
       node: true
-    }
+    },
+    'import/core-modules': ['windi.css']
   },
   rules: {
     'no-debugger': 1,
@@ -61,7 +61,7 @@ module.exports = {
     'vue/attributes-order': [
       'error',
       {
-        order: ['DEFINITION','LIST_RENDERING','CONDITIONALS','RENDER_MODIFIERS','GLOBAL','UNIQUE','TWO_WAY_BINDING','OTHER_DIRECTIVES','OTHER_ATTR','EVENTS','CONTENT'],
+        order: ['DEFINITION','LIST_RENDERING','CONDITIONALS','RENDER_MODIFIERS','GLOBAL', ["UNIQUE", "SLOT"],'TWO_WAY_BINDING','OTHER_DIRECTIVES','OTHER_ATTR','EVENTS','CONTENT'],
         "alphabetical": false
       }
     ],

@@ -1,8 +1,11 @@
 import Vue from 'vue'
-import App from './App.vue'
-import { importAll, defSortImportAll } from '@/utils'
-import './styles/reset.css'
+
+import { defSortImportAll, importAll } from '@/utils'
+
 import 'windi.css'
+import App from './App.vue'
+import eventBus from './eventBus'
+import './styles/reset.css'
 
 const instanceOption = {}
 const plugins = importAll(require.context('./plugins/', false, /\.(ts|js)$/), defSortImportAll)
@@ -22,7 +25,6 @@ plugins.forEach(m => {
 })
 
 Vue.config.productionTip = false
-import eventBus from './eventBus'
 Vue.use(eventBus)
 /* eslint-disable no-new */
 new Vue({

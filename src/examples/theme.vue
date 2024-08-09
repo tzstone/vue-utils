@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import inner from '@/components/theme/inner'
-import chart from '@/components/theme/chart'
+import chart from '@/components/theme/chart.vue';
+import inner from '@/components/theme/inner.vue';
 
 export default {
   name: '',

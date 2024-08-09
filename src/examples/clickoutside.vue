@@ -5,7 +5,7 @@
     <button @click="off">off</button>
 
     <div>
-      <div v-show="showMask1" class="mask1" />
+      <div v-show="showMask1" class="mask1"/>
       <div v-clickoutside="clickoutside1" class="dialog1">click dialog1</div>
     </div>
 
@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import emitter, { EmitterEvents } from '@/utils/emitter'
+import emitter, { EmitterEvents } from '@/utils/emitter';
 
 export default {
   data() {

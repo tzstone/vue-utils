@@ -6,8 +6,9 @@
  * real http
  */
 import axios from 'axios'
-import { createDefer } from './util'
 import { isPlainObject } from 'lodash-es'
+
+import { createDefer } from './util'
 
 type Adapter = (config, next?: () => Promise<any>) => Promise<any>
 
@@ -134,7 +135,7 @@ const mergeAdapterEnhancer = (): Adapter => {
         chunk = resData.data.filter(item => config['_rawReqKeys_'].includes(item[_resKey]))
       }
 
-      return Promise.resolve({ ...res, data: { ...resData, data: chunk } })
+      return Promise.resolve({ ...res, data: { ...resData, data: chunk }})
     } catch (e) {
       return Promise.reject(e)
     }
@@ -180,7 +181,7 @@ const limitAdapterEnhancer = (): Adapter => {
 }
 
 function generateReqKey(config) {
-  const { method, url, params = {}, data = {} } = config
+  const { method, url, params = {}, data = {}} = config
   return [method, url, JSON.stringify(params), JSON.stringify(data)].join('&')
 }
 

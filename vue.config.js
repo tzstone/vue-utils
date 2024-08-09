@@ -1,4 +1,5 @@
 const path = require('path')
+
 const WorkerPlugin = require('worker-plugin')
 const isProduction = process.env.NODE_ENV === 'production'
 function resolve(dir) {
