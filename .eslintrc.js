@@ -1,16 +1,70 @@
 module.exports = {
   root: true,
-  extends: ['plugin:zflow/vue-ts', 'plugin:import/recommended', 'plugin:import/typescript'],
+  env: {
+    node: true
+  },
+  plugins: ['prettier'],
+  extends: [
+    'eslint:recommended',
+    'prettier',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:vue/recommended',
+    'plugin:import/recommended',
+    'plugin:import/typescript'
+  ],
+  parser: 'vue-eslint-parser',
+  parserOptions: {
+    parser: '@typescript-eslint/parser'
+  },
   settings: {
     'import/resolver': {
       typescript: {
         alwaysTryTypes: true
-      }
+      },
+      alias: true,
+      node: true
     }
   },
   rules: {
-    'object-curly-spacing': 1,
-    semi: 0,
+    'no-debugger': 1,
+    'no-unused-vars': [1, {
+      'vars': 'all',
+      'args': 'none'
+    }],
+    'object-curly-spacing': [2, 'always', {
+      objectsInObjects: false
+    }],
+    '@typescript-eslint/ban-ts-comment': 0, // 禁止ts指令注释
+    '@typescript-eslint/ban-types': 0,
+    '@typescript-eslint/no-explicit-any': 0, // 禁止使用any类型
+    '@typescript-eslint/no-var-requires': 0,
+    '@typescript-eslint/triple-slash-reference': 0,
+    '@typescript-eslint/explicit-module-boundary-types': 0,
+    '@typescript-eslint/no-empty-function': 0,
+    'vue/html-indent': 0,
+    'vue/max-attributes-per-line': 0,
+    'vue/singleline-html-element-content-newline': 0,
+    'vue/multiline-html-element-content-newline': 0,
+    'vue/no-v-html': 0,
+    'vue/require-default-prop': 0,
+    'vue/html-closing-bracket-newline': 0,
+    'vue/html-closing-bracket-spacing': 0,
+    'vue/html-self-closing': ['error', {
+      html: {
+        void: 'any',
+        normal: 'any',
+        component: 'always',
+      },
+    }],
+    'vue/require-v-for-key': 2,
+    'vue/this-in-template': 2,
+    'vue/attributes-order': [
+      'error',
+      {
+        order: ['DEFINITION','LIST_RENDERING','CONDITIONALS','RENDER_MODIFIERS','GLOBAL','UNIQUE','TWO_WAY_BINDING','OTHER_DIRECTIVES','OTHER_ATTR','EVENTS','CONTENT'],
+        "alphabetical": false
+      }
+    ],
     'import/order': [
       'error',
       {
@@ -41,6 +95,7 @@ module.exports = {
         alphabetize: { order: 'asc', caseInsensitive: true },
         warnOnUnassignedImports: false
       }
-    ]
+    ],
+    'import/no-named-as-default': 0
   }
-}
+};
