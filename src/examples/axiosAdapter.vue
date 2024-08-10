@@ -5,11 +5,12 @@
     <el-button type="primary" size="small" @click="cache">cache</el-button>
     <el-button type="primary" size="small" @click="forceUpdate">forceUpdate</el-button>
     <el-button type="primary" size="small" @click="interceptor">interceptor</el-button>
+    <el-button type="primary" size="small" @click="post">post</el-button>
   </div>
 </template>
 
 <script>
-import enhanceHttp from '@/utils/adapter'
+import enhanceHttp from '@/utils/adapter';
 export default {
   name: '',
   data() {
@@ -114,6 +115,21 @@ export default {
         .catch(err => {
           console.error(err)
         })
+    },
+    post() {
+      const data = {
+        name: 'zhang',
+        age: 18
+      }
+      Object.defineProperty(data, '_private' , {
+        enumerable: false,
+        writable: true,
+        value: 1
+      })
+      console.log(data)
+      enhanceHttp.post('https://apifoxmock.com/m1/4426965-4072270-default/submit', data).then(res => {
+        debugger
+      })
     }
   }
 }
