@@ -1,6 +1,14 @@
 <template>
   <div>
-    <JsonForm v-model="form" :schema="schema"/>
+    <JsonForm v-model="form" :schema="schema">
+      <template #date="{form}">
+        <el-date-picker
+        v-model="form.date"
+        value-format="yyyy-MM-dd"
+        type="date"
+        placeholder="选择日期"/>
+    </template>
+    </JsonForm>
     <div>
       /-----------------------------------/
     </div>
@@ -34,7 +42,9 @@ export default {
         name: '111',
         age: 21,
         province: 'guangdong',
-        city: 'shenzhen'
+        city: 'shenzhen',
+        searchKey: '',
+        date: ''
       },
       schema: {
         formItems: [{
@@ -97,6 +107,12 @@ export default {
         {
           type: 'input',
           field: 'age'
+        }, {
+          type: 'search',
+          field: 'searchKey'
+        }, {
+          type: 'slot',
+          field: 'date'
         }]
       }
     }

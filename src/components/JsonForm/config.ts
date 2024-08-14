@@ -9,7 +9,7 @@ export const defElementConfig = {
     component: 'el-input',
     props: {
       clearable: true,
-      'prefix-icon': "el-icon-search"
+      prefixIcon: "el-icon-search"
     }
   },
   select: {

@@ -9,9 +9,9 @@
           :value="t[item.optionKey.value]"/>
       </el-select>
       <template v-else-if="item.type==='slot'">
-        <slot :name="item.field"></slot>
+        <slot :name="item.field" :form="form"></slot>
       </template>
-      <component :is="item.component" v-else v-model="form[item.field]" :class="item.class" :style="item.style" v-on="item.on" />
+      <component :is="item.component" v-else v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on" />
     </el-form-item>
     <el-form-item>
       <el-button v-if="schema.submitBtn" @click="onSubmit">{{ schema.submitBtn.innerText || '查询' }}</el-button>
@@ -47,7 +47,7 @@ export default defineComponent({
 
     const getFormItem = (config: FormItem) => {
       const item = { ...config }
-      const defConfig = defElementConfig[item.type]
+      const defConfig = defElementConfig[item.type] || {}
       // @ts-ignore
       item.component = defConfig.component
 
