@@ -1,5 +1,9 @@
 <template>
   <div>
+    <JsonForm v-model="form" :schema="schema"/>
+    <div>
+      /-----------------------------------/
+    </div>
     <button @click="emit">emit</button>
     name: <el-input v-model="info.name" /> address: <el-input v-model="info.address" /> company:
     <el-input v-model="info.company.name" /> age: <span>{{ info.age }}</span>
@@ -11,15 +15,91 @@
     <el-button @click="addArrayItem">addArrayItem</el-button>
     <el-button @click="changeArray">changeArray</el-button>
     <el-button @click="log">log</el-button>
+
+
   </div>
 </template>
 
 <script>
-import { mapFields } from '@/utils'
+import JsonForm from '@/components/JsonForm/index';
+import { mapFields } from '@/utils';
 
 export default {
+  components: {
+    JsonForm
+  },
   data() {
-    return {}
+    return {
+      form: {
+        name: '111',
+        age: 18,
+        province: 'guangdong',
+        city: 'shenzhen'
+      },
+      schema: {
+        formItems: [{
+          type: 'select',
+          field: 'name',
+          runtimeProps: (form) => {
+              return {
+                disabled: form.age === '21'
+              }
+          },
+          options: [{
+            name: 'zhang san',
+            id: '111'
+          },{
+            name: 'li shi',
+            id: '222'
+          }],
+          optionKey: {
+            label: 'name',
+            value: 'id'
+          }
+        },
+        {
+          type: 'select',
+          field: 'province',
+          options: [{
+            label: '广东',
+            value: 'guangdong'
+          }, {
+            label: '广西',
+            value: 'guangxi'
+          }]
+        },
+        {
+          type: 'select',
+          field: 'city',
+          runtimeOptions: (form) => {
+            const citys = form.province === 'guangdong' ? [{
+                  label: '深圳',
+                  value: 'shenzhen'
+                },{
+                  label: '广州',
+                  value: 'guangzhou'
+                }] : [{
+                  label: '南宁',
+                  value: 'nanning'
+                },{
+                  label: '梧州',
+                  value: 'wuzhou'
+                }]
+
+            return new Promise((resolve) => {
+              setTimeout(() => {
+                resolve(citys)
+                form.city = citys[0].value
+              }, 1000)
+            })
+          }
+        },
+        {
+          type: 'input',
+          field: 'age'
+        }]
+      }
+    }
   },
   watch: {
     info: {

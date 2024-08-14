@@ -1,3 +1,4 @@
+import VueCompositionAPI from '@vue/composition-api'
 import Vue from 'vue'
 
 import { defSortImportAll, importAll } from '@/utils'
@@ -25,6 +26,7 @@ plugins.forEach(m => {
 })
 
 Vue.config.productionTip = false
+Vue.use(VueCompositionAPI)
 Vue.use(eventBus)
 /* eslint-disable no-new */
 new Vue({

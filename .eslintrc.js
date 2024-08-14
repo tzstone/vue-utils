@@ -58,6 +58,7 @@ module.exports = {
     }],
     'vue/require-v-for-key': 2,
     'vue/this-in-template': 2,
+    'vue/require-prop-types': 0,
     'vue/attributes-order': [
       'error',
       {
@@ -96,6 +97,7 @@ module.exports = {
         warnOnUnassignedImports: false
       }
     ],
-    'import/no-named-as-default': 0
+    'import/no-named-as-default': 0,
+    'import/namespace': 0
   }
 };
