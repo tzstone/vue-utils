@@ -32,7 +32,7 @@ export default {
     return {
       form: {
         name: '111',
-        age: 18,
+        age: 21,
         province: 'guangdong',
         city: 'shenzhen'
       },
@@ -42,7 +42,7 @@ export default {
           field: 'name',
           runtimeProps: (form) => {
               return {
-                disabled: form.age === '21'
+                disabled: form.age == 21
               }
           },
           options: [{
