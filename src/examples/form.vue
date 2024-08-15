@@ -1,7 +1,7 @@
 <template>
   <div>
     <JsonForm v-model="form" :schema="schema">
-      <template #date="{form}">
+      <template #date>
         <el-date-picker
         v-model="form.date"
         value-format="yyyy-MM-dd"
@@ -47,6 +47,19 @@ export default {
         date: ''
       },
       schema: {
+        prefixBtns: [{
+          icon: 'el-icon-search',
+          innerText: '搜索',
+          click: () => {
+            alert('搜索')
+          }
+        }, {
+          icon: 'el-icon-share',
+          innerText: '分享',
+          click: () => {
+            alert('分享')
+          }
+        }], 
         formItems: [{
           type: 'select',
           field: 'name',

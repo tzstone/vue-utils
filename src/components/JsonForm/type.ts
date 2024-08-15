@@ -22,7 +22,13 @@ export interface FormItem {
   }
   class?: string;
 }
+export interface OperateBtns {
+  icon?: string;
+  innerText?: string;
+  click: (e) => void;
+}
 export interface Schema {
+  prefixBtns: OperateBtns[];
   formItems: FormItem[];
   submitBtn: {
     click: (e) => void,

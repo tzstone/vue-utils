@@ -1,5 +1,8 @@
 <template>
   <el-form ref="formRef" :model="form" :rules="rules" label-width="auto" inline size="small" v-bind="$attrs" v-on="$listeners">
+    <el-form-item v-if="(schema.prefixBtns || []).length" class="prefix-form-item">
+      <el-button v-for="(item, index) in schema.prefixBtns" :key="index" :icon="item.icon" @click="(e) => item.click(e)">{{ item.innerText }}</el-button>
+    </el-form-item>
     <el-form-item v-for="(item, index) in formItems" :key="index" :label="item.label" :prop="item.field">
       <el-select v-if="item.type==='select'" v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on" >
         <el-option
@@ -9,7 +12,7 @@
           :value="t[item.optionKey.value]"/>
       </el-select>
       <template v-else-if="item.type==='slot'">
-        <slot :name="item.field" :form="form"></slot>
+        <slot :name="item.field" ></slot>
       </template>
       <component :is="item.component" v-else v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on" />
     </el-form-item>
@@ -126,6 +129,8 @@ export default defineComponent({
 })
 </script>
 
-<style lang='less' scoped>
-
+<style lang='scss' scoped>
+.prefix-form-item {
+  margin-right: 20px;
+}
 </style>
