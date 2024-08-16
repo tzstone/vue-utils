@@ -18,5 +18,11 @@ export const defElementConfig = {
       clearable: true,
       filterable: true
     }
+  },
+  checkbox: {
+    component: 'el-checkbox',
+  },
+  'checkbox-group': {
+    component: 'el-checkbox-group',
   }
 }

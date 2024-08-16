@@ -1,16 +1,30 @@
 <template>
-  <el-form ref="formRef" :model="form" :rules="rules" label-width="auto" inline size="small" v-bind="$attrs" v-on="$listeners">
+  <el-form ref="formRef" class="json-form-wrap" :model="form" :rules="rules" label-width="auto" style="width: 460px;" :inline="inline" size="small" v-bind="$attrs" v-on="$listeners">
     <el-form-item class="prefix-form-item">
-      <el-button v-for="(item, index) in schema.prefixBtns" :key="index" :icon="item.icon" @click="(e) => item.click(e)">{{ item.innerText }}</el-button>
+      <el-button v-for="(item, index) in (schema.prefixBtns || [])" :key="index" :icon="item.icon" @click="(e) => item.click(e)">{{ item.innerText }}</el-button>
     </el-form-item>
     <el-form-item v-for="(item, index) in formItems" :key="index" :label="item.label" :prop="item.field">
-      <el-select v-if="item.type==='select'" v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on" >
-        <el-option
-          v-for="t in optionsMap[item.field]"
-          :key="t[item.optionKey.value]"
-          :label="t[item.optionKey.label]"
-          :value="t[item.optionKey.value]"/>
-      </el-select>
+      <!-- select -->
+      <template v-if="item.type==='select'">
+        <el-select v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on" >
+          <el-option
+            v-for="(t, i) in optionsMap[item.field]"
+            :key="i"
+            :label="t[item.optionKey.label]"
+            :value="t[item.optionKey.value]"/>
+        </el-select>
+      </template>
+      <!-- checkbox -->
+      <template v-else-if="item.type==='checkbox'">
+        <el-checkbox v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on">{{ optionsMap[item.field] ? optionsMap[item.field][0].label : '' }}</el-checkbox>
+      </template>
+      <!-- checkbox-group -->
+      <template v-else-if="item.type==='checkbox-group'">
+        <el-checkbox-group v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on">
+          <el-checkbox v-for="(t, i) in optionsMap[item.field]" :key="i" :label="t.value">{{ t.label }}</el-checkbox>
+        </el-checkbox-group>
+      </template>
+      <!-- slot -->
       <template v-else-if="item.type==='slot'">
         <slot :name="item.field" ></slot>
       </template>
@@ -38,6 +52,10 @@ export default defineComponent({
     },
     schema: {
       type: Object as PropType<Schema>,
+    },
+    inline: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props, ctx) {
@@ -64,12 +82,13 @@ export default defineComponent({
       }
 
       if (item.options) {
-        optionsMap[item.field] = item.options
+        optionsMap[item.field] = Object.freeze(item.options)
         delete item.options
       }
       if (item.runtimeOptions) {
         watch(() => item.runtimeOptions(form.value), async () => {
-          ctx.root.$set(optionsMap, item.field, await item.runtimeOptions(form.value))
+          const options = await item.runtimeOptions(form.value)
+          ctx.root.$set(optionsMap, item.field, Object.freeze(options))
         }, { immediate: true })
       }
 
@@ -130,10 +149,18 @@ export default defineComponent({
 </script>
 
 <style lang='scss' scoped>
-.prefix-form-item {
-  margin-right: 0;
-  .el-button:last-child{
-    margin-right: 20px;
+.json-form-wrap {
+  .prefix-form-item {
+    margin-right: 0;
+    .el-button:last-child{
+      margin-right: 20px;
+    }
+  }
+  ::v-deep {
+    .el-select, .el-date-editor{
+      width: 100%;
+    }
   }
 }
+
 </style>

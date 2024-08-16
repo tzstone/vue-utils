@@ -44,7 +44,9 @@ export default {
         province: 'guangdong',
         city: 'shenzhen',
         searchKey: '',
-        date: ''
+        date: '',
+        checked: true,
+        checkList: []
       },
       schema: {
         prefixBtns: [{
@@ -123,6 +125,28 @@ export default {
         }, {
           type: 'search',
           field: 'searchKey'
+        }, {
+          type: 'checkbox',
+          field: 'checked',
+          options: [{
+            label: '备选项'
+          }]
+        },{
+          type: 'checkbox-group',
+          field: 'checkList',
+          runtimeOptions: (form) => {
+            return new Promise((resolve) => {
+              setTimeout(() => {
+                resolve([{
+                  label: '复选框 A',
+                  value: 'A'
+                }, {
+                  label: '复选框 B',
+                  value: 'B'
+                }])
+              })
+            })
+          }
         }, {
           type: 'slot',
           field: 'date'
