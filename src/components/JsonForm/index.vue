@@ -1,6 +1,6 @@
 <template>
   <el-form ref="formRef" :model="form" :rules="rules" label-width="auto" inline size="small" v-bind="$attrs" v-on="$listeners">
-    <el-form-item v-if="(schema.prefixBtns || []).length" class="prefix-form-item">
+    <el-form-item class="prefix-form-item">
       <el-button v-for="(item, index) in schema.prefixBtns" :key="index" :icon="item.icon" @click="(e) => item.click(e)">{{ item.innerText }}</el-button>
     </el-form-item>
     <el-form-item v-for="(item, index) in formItems" :key="index" :label="item.label" :prop="item.field">
@@ -131,6 +131,9 @@ export default defineComponent({
 
 <style lang='scss' scoped>
 .prefix-form-item {
-  margin-right: 20px;
+  margin-right: 0;
+  .el-button:last-child{
+    margin-right: 20px;
+  }
 }
 </style>
