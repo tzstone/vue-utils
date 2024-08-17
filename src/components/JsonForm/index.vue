@@ -16,12 +16,12 @@
         </template>
         <!-- checkbox -->
         <template v-else-if="item.type==='checkbox'">
-          <el-checkbox v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on">{{ optionsMap[item.field] ? optionsMap[item.field][0].label : '' }}</el-checkbox>
+          <el-checkbox v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on">{{ optionsMap[item.field] ? optionsMap[item.field][0][item.optionKey.label] : '' }}</el-checkbox>
         </template>
         <!-- checkbox-group -->
         <template v-else-if="item.type==='checkboxGroup'">
           <el-checkbox-group v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on">
-            <el-checkbox v-for="(t, i) in optionsMap[item.field]" :key="i" :label="t.value">{{ t.label }}</el-checkbox>
+            <el-checkbox v-for="(t, i) in optionsMap[item.field]" :key="i" :label="t[item.optionKey.value]">{{ t[item.optionKey.label] }}</el-checkbox>
           </el-checkbox-group>
         </template>
         <!-- slot -->
