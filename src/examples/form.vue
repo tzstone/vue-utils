@@ -42,7 +42,7 @@ export default {
         searchKey: '',
         date: '2024-08-21',
         dateRange: ['2024-09-01', '2024-09-16'],
-        rate: '',
+        rate: 3,
         checked: true,
         'checked-label': 1,
         checkList: []
@@ -165,7 +165,10 @@ export default {
           }
         }, {
           type: 'slot',
-          field: 'rate'
+          field: 'rate',
+          show: (form) => {
+            return form.checked
+          }
         }],
         submitBtn: {
           click: ()=> {

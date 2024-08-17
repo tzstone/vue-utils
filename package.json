@@ -14,7 +14,7 @@
     "axios": "^0.24.0",
     "core-js": "^3.6.5",
     "echarts": "^5.3.2",
-    "element-ui": "^2.15.1",
+    "element-ui": "2.15.14",
     "html-to-image": "^1.11.11",
     "html2canvas": "^1.4.1",
     "lodash-es": "^4.17.21",

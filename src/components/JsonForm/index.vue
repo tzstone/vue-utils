@@ -3,7 +3,8 @@
       <el-form-item class="prefix-form-item">
         <el-button v-for="(item, index) in (schema.prefixBtns || [])" :key="index" :icon="item.icon" @click="(e) => item.click(e)">{{ item.innerText }}</el-button>
       </el-form-item>
-      <el-form-item v-for="(item, index) in formItems" :key="index" :label="item.label" :prop="item.field">
+      <!-- eslint-disable-next-line vue/no-use-v-if-with-v-for -->
+      <el-form-item v-for="(item, index) in formItems" v-if="item.display" :key="index" :label="item.label" :prop="item.field">
         <!-- select -->
         <template v-if="item.type==='select'">
           <el-select v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on" >
@@ -98,6 +99,19 @@ export default defineComponent({
       }
 
       item.optionKey = Object.assign({ label: 'label', value: 'value' }, item.optionKey || {})
+      
+      // @ts-ignore
+      item.display = true
+      if (('show' in item) && !isFunction(item.show)) {
+        // @ts-ignore
+        item.display = !!item.show
+      } else if (isFunction(item.show)) {
+        // @ts-ignore
+        watch(() => item.show(form.value), (show) => {
+          // @ts-ignore
+          item.display = !!show
+        }, { immediate: true })
+      }
 
       return item
     }
