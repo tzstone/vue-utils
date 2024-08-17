@@ -95,7 +95,7 @@ export default {
         {
           type: 'select',
           field: 'city',
-          runtimeOptions: (form) => {
+          options: (form) => {
             const citys = form.province === 'guangdong' ? [{
                   label: '深圳',
                   value: 'shenzhen'
@@ -137,7 +137,7 @@ export default {
           options: [{
             label: '备选项'
           }]
-        },{
+        }, {
           type: 'checkbox',
           field: 'checked-label',
           options: [{
@@ -147,10 +147,10 @@ export default {
             'true-label' : 1,
             'false-label': 0
           }
-        },{
+        }, {
           type: 'checkboxGroup',
           field: 'checkList',
-          runtimeOptions: (form) => {
+          options: (form) => {
             return new Promise((resolve) => {
               setTimeout(() => {
                 resolve([{

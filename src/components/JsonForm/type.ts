@@ -6,13 +6,13 @@ export interface FormItem {
     [key: string]: any
   }
   runtimeProps?: (form) => { [key: string]: any }
-  options?: any[];
-  runtimeOptions?: (form) => Promise<any[]>
+  options?: any[] | ((form) => Promise<any[]>);
   optionKey?: {
     label: string,
     value: string
   }
   required?: boolean;
+  show?: boolean | ((form) => boolean);
   rules?: any[]
   on?: {
     [key: string]: (e) => void
@@ -21,6 +21,7 @@ export interface FormItem {
     [key: string]: any;
   }
   class?: string;
+  col?: number; // 组件布局规则
 }
 export interface OperateBtns {
   icon?: string;

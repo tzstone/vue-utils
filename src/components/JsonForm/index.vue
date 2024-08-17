@@ -19,7 +19,7 @@
           <el-checkbox v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on">{{ optionsMap[item.field] ? optionsMap[item.field][0].label : '' }}</el-checkbox>
         </template>
         <!-- checkbox-group -->
-        <template v-else-if="item.type==='checkbox-group'">
+        <template v-else-if="item.type==='checkboxGroup'">
           <el-checkbox-group v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on">
             <el-checkbox v-for="(t, i) in optionsMap[item.field]" :key="i" :label="t.value">{{ t.label }}</el-checkbox>
           </el-checkbox-group>
@@ -39,7 +39,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, reactive, ref, watch } from '@vue/composition-api';
-import { isBoolean, isPlainObject } from 'lodash-es';
+import { isBoolean, isFunction, isPlainObject } from 'lodash-es';
 
 import { defElementConfig } from './config';
 import { FormItem, Schema } from './type';
@@ -85,13 +85,14 @@ export default defineComponent({
         })
       }
 
-      if (item.options) {
+      if (Array.isArray(item.options)) {
         optionsMap[item.field] = Object.freeze(item.options)
         delete item.options
-      }
-      if (item.runtimeOptions) {
-        watch(() => item.runtimeOptions(form.value), async () => {
-          const options = await item.runtimeOptions(form.value)
+      } else if (isFunction(item.options)) {
+        // @ts-ignore
+        watch(() => item.options(form.value), async () => {
+          // @ts-ignore
+          const options = await item.options(form.value)
           ctx.root.$set(optionsMap, item.field, Object.freeze(options))
         }, { immediate: true })
       }
