@@ -79,7 +79,7 @@ export default defineComponent({
       item.props = Object.assign({}, defConfig.props || {}, item.props || {})
       if (item.runtimeProps) {
         watch(() => item.runtimeProps(form.value), () => {
-          item.props = Object.assign(item.props, (item.runtimeProps(form.value) || {}))
+          item.props = Object.assign({}, item.props, (item.runtimeProps(form.value) || {}))
         }, {
           immediate: true
         })
