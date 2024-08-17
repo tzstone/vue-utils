@@ -166,7 +166,12 @@ export default {
         }, {
           type: 'slot',
           field: 'rate'
-        }]
+        }],
+        submitBtn: {
+          click: ()=> {
+            alert('查询')
+          }
+        }
       }
     }
   },

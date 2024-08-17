@@ -1,40 +1,40 @@
 <template>
-  <el-form ref="formRef" class="json-form-wrap" :model="form" :rules="rules" label-width="auto" style="width: 460px;" :inline="inline" size="small" v-bind="$attrs" v-on="$listeners">
-    <el-form-item class="prefix-form-item">
-      <el-button v-for="(item, index) in (schema.prefixBtns || [])" :key="index" :icon="item.icon" @click="(e) => item.click(e)">{{ item.innerText }}</el-button>
-    </el-form-item>
-    <el-form-item v-for="(item, index) in formItems" :key="index" :label="item.label" :prop="item.field">
-      <!-- select -->
-      <template v-if="item.type==='select'">
-        <el-select v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on" >
-          <el-option
-            v-for="(t, i) in optionsMap[item.field]"
-            :key="i"
-            :label="t[item.optionKey.label]"
-            :value="t[item.optionKey.value]"/>
-        </el-select>
-      </template>
-      <!-- checkbox -->
-      <template v-else-if="item.type==='checkbox'">
-        <el-checkbox v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on">{{ optionsMap[item.field] ? optionsMap[item.field][0].label : '' }}</el-checkbox>
-      </template>
-      <!-- checkbox-group -->
-      <template v-else-if="item.type==='checkbox-group'">
-        <el-checkbox-group v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on">
-          <el-checkbox v-for="(t, i) in optionsMap[item.field]" :key="i" :label="t.value">{{ t.label }}</el-checkbox>
-        </el-checkbox-group>
-      </template>
-      <!-- slot -->
-      <template v-else-if="item.type==='slot'">
-        <slot :name="item.field" ></slot>
-      </template>
-      <component :is="item.component" v-else v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on" />
-    </el-form-item>
-    <el-form-item>
-      <el-button v-if="schema.submitBtn" @click="onSubmit">{{ schema.submitBtn.innerText || '查询' }}</el-button>
-      <el-button v-if="schema.resetBtn" @click="onReset">{{ resetText }}</el-button>
-    </el-form-item>
-  </el-form>
+    <el-form ref="formRef" class="json-form-wrap" :model="form" :rules="rules" label-width="auto" :inline="inline" :disabled="disabled" size="small" v-bind="$attrs" v-on="$listeners">
+      <el-form-item class="prefix-form-item">
+        <el-button v-for="(item, index) in (schema.prefixBtns || [])" :key="index" :icon="item.icon" @click="(e) => item.click(e)">{{ item.innerText }}</el-button>
+      </el-form-item>
+      <el-form-item v-for="(item, index) in formItems" :key="index" :label="item.label" :prop="item.field">
+        <!-- select -->
+        <template v-if="item.type==='select'">
+          <el-select v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on" >
+            <el-option
+              v-for="(t, i) in optionsMap[item.field]"
+              :key="i"
+              :label="t[item.optionKey.label]"
+              :value="t[item.optionKey.value]"/>
+          </el-select>
+        </template>
+        <!-- checkbox -->
+        <template v-else-if="item.type==='checkbox'">
+          <el-checkbox v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on">{{ optionsMap[item.field] ? optionsMap[item.field][0].label : '' }}</el-checkbox>
+        </template>
+        <!-- checkbox-group -->
+        <template v-else-if="item.type==='checkbox-group'">
+          <el-checkbox-group v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on">
+            <el-checkbox v-for="(t, i) in optionsMap[item.field]" :key="i" :label="t.value">{{ t.label }}</el-checkbox>
+          </el-checkbox-group>
+        </template>
+        <!-- slot -->
+        <template v-else-if="item.type==='slot'">
+          <slot :name="item.field"></slot>
+        </template>
+        <component :is="item.component" v-else v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on" />
+      </el-form-item>
+      <el-form-item>
+        <el-button v-if="schema.submitBtn" type="primary" @click="onSubmit">{{ schema.submitBtn.innerText || '查询' }}</el-button>
+        <el-button v-if="schema.resetBtn" @click="onReset">{{ resetText }}</el-button>
+      </el-form-item>
+    </el-form>
 </template>
 
 <script lang="ts">
@@ -56,6 +56,10 @@ export default defineComponent({
     inline: {
       type: Boolean,
       default: false
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props, ctx) {
@@ -72,7 +76,7 @@ export default defineComponent({
       // @ts-ignore
       item.component = defConfig.component
 
-      item.props = Object.assign({}, defConfig.props||{}, item.props)
+      item.props = Object.assign({}, defConfig.props || {}, item.props || {})
       if (item.runtimeProps) {
         watch(() => item.runtimeProps(form.value), () => {
           item.props = Object.assign(item.props, (item.runtimeProps(form.value) || {}))
