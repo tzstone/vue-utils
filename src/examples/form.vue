@@ -1,12 +1,8 @@
 <template>
   <div>
     <JsonForm v-model="form" :schema="schema">
-      <template #date>
-        <el-date-picker
-        v-model="form.date"
-        value-format="yyyy-MM-dd"
-        type="date"
-        placeholder="选择日期"/>
+      <template #rate>
+        <el-rate v-model="form.rate"/>
     </template>
     </JsonForm>
     <div>
@@ -44,8 +40,11 @@ export default {
         province: 'guangdong',
         city: 'shenzhen',
         searchKey: '',
-        date: '',
+        date: '2024-08-21',
+        dateRange: ['2024-09-01', '2024-09-16'],
+        rate: '',
         checked: true,
+        'checked-label': 1,
         checkList: []
       },
       schema: {
@@ -125,6 +124,13 @@ export default {
         }, {
           type: 'search',
           field: 'searchKey'
+        }, 
+        {
+          type: 'date',
+          field: 'date'
+        }, {
+          type: 'dateRange',
+          field: 'dateRange'
         }, {
           type: 'checkbox',
           field: 'checked',
@@ -132,7 +138,17 @@ export default {
             label: '备选项'
           }]
         },{
-          type: 'checkbox-group',
+          type: 'checkbox',
+          field: 'checked-label',
+          options: [{
+            label: '备选项 true-label'
+          }],
+          props:{
+            'true-label' : 1,
+            'false-label': 0
+          }
+        },{
+          type: 'checkboxGroup',
           field: 'checkList',
           runtimeOptions: (form) => {
             return new Promise((resolve) => {
@@ -149,7 +165,7 @@ export default {
           }
         }, {
           type: 'slot',
-          field: 'date'
+          field: 'rate'
         }]
       }
     }

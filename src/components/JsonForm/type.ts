@@ -1,5 +1,5 @@
 export interface FormItem {
-  type: 'input' | 'search' | 'textarea' | 'select' | 'slot' |'checkbox' | 'checkbox-group';
+  type: 'input' | 'search' | 'textarea' | 'select' | 'slot' |'checkbox' | 'checkboxGroup' | 'date' | 'dateRange';
   field?: string;
   label?: string;
   props?: {
