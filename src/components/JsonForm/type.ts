@@ -1,5 +1,17 @@
+export type RuntimeOptions = (form) => Promise<any[]>;
+export type RuntimeShow = (form) => boolean;
 export interface FormItem {
-  type: 'input' | 'search' | 'textarea' | 'select' | 'slot' | 'checkbox' | 'checkboxGroup' | 'date' | 'dateRange';
+  type:
+    | 'input'
+    | 'search'
+    | 'textarea'
+    | 'select'
+    | 'slot'
+    | 'checkbox'
+    | 'checkboxGroup'
+    | 'date'
+    | 'dateRange'
+    | 'upload';
   field?: string;
   label?: string;
   props?: {
@@ -7,7 +19,7 @@ export interface FormItem {
   };
   runtimeProps?: (form) => { [key: string]: any };
   // select/checkboxGroup
-  options?: any[] | ((form) => Promise<any[]>);
+  options?: any[] | RuntimeOptions;
   optionKey?: {
     label: string;
     value: string;
@@ -15,7 +27,7 @@ export interface FormItem {
   // button/checkbox
   innerText?: string;
   required?: boolean;
-  show?: boolean | ((form) => boolean);
+  show?: boolean | RuntimeShow;
   rules?: any[];
   on?: {
     [key: string]: (e) => void;
@@ -25,6 +37,11 @@ export interface FormItem {
   };
   class?: string;
   col?: number; // 组件布局规则
+}
+
+export interface RenderFormItem extends FormItem {
+  display?: boolean;
+  component?: string;
 }
 export interface OperateBtns {
   icon?: string;

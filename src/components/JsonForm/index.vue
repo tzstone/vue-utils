@@ -25,6 +25,13 @@
             <el-checkbox v-for="(t, i) in optionsMap[item.field]" :key="i" :label="t[item.optionKey.value]">{{ t[item.optionKey.label] }}</el-checkbox>
           </el-checkbox-group>
         </template>
+         <!-- upload -->
+         <template v-else-if="item.type==='upload'">
+          <el-upload :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on">
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          </el-upload>
+        </template>
         <!-- slot -->
         <template v-else-if="item.type==='slot'">
           <slot :name="item.field"></slot>
@@ -42,8 +49,8 @@
 import { computed, defineComponent, PropType, reactive, ref, watch } from '@vue/composition-api';
 import { isBoolean, isFunction, isPlainObject } from 'lodash-es';
 
-import { defElementConfig } from './config';
-import { FormItem, Schema } from './type';
+import { getElementConfig } from './config';
+import { FormItem, RenderFormItem, RuntimeOptions, RuntimeShow, Schema } from './type';
 export default defineComponent({
   name: 'JsonForm',
   props: {
@@ -72,12 +79,13 @@ export default defineComponent({
     })
 
     const getFormItem = (config: FormItem) => {
-      const item = { ...config }
-      const defConfig = defElementConfig[item.type] || {}
-      // @ts-ignore
-      item.component = defConfig.component
+      const item: RenderFormItem = { ...config }
+      const { component, runtimeProps, props } = getElementConfig(item) || {}
+      
+      item.component = component
+      item.props = props
+      item.runtimeProps = runtimeProps
 
-      item.props = Object.assign({}, defConfig.props || {}, item.props || {})
       if (item.runtimeProps) {
         watch(() => item.runtimeProps(form.value), () => {
           item.props = Object.assign({}, item.props, (item.runtimeProps(form.value) || {}))
@@ -90,25 +98,19 @@ export default defineComponent({
         optionsMap[item.field] = Object.freeze(item.options)
         delete item.options
       } else if (isFunction(item.options)) {
-        // @ts-ignore
-        watch(() => item.options(form.value), async () => {
-          // @ts-ignore
-          const options = await item.options(form.value)
+        watch(() => (item.options as RuntimeOptions)(form.value), async () => {
+          const options = await (item.options as RuntimeOptions)(form.value)
           ctx.root.$set(optionsMap, item.field, Object.freeze(options))
         }, { immediate: true })
       }
 
       item.optionKey = Object.assign({ label: 'label', value: 'value' }, item.optionKey || {})
       
-      // @ts-ignore
       item.display = true
       if (('show' in item) && !isFunction(item.show)) {
-        // @ts-ignore
         item.display = !!item.show
       } else if (isFunction(item.show)) {
-        // @ts-ignore
-        watch(() => item.show(form.value), (show) => {
-          // @ts-ignore
+        watch(() => (item.show as RuntimeShow)(form.value), (show) => {
           item.display = !!show
         }, { immediate: true })
       }
@@ -179,6 +181,30 @@ export default defineComponent({
     .el-select, .el-date-editor{
       width: 100%;
     }
+    .el-form-item__content {
+      .el-upload-list__item {
+        width: 40px;
+        height: 40px;
+        display: inline-flex;
+        .el-icon-delete {
+          font-size: 14px;
+        }
+        .el-upload-list__item-status-label{
+          display: none;
+        }
+      }
+      .el-upload__tip {
+        margin-top: 5px;
+        line-height: 1;
+      }
+      .el-upload {
+        height: 32px;
+        width: unset;
+        line-height: unset;
+        border: none;
+      }
+    }
+    
   }
 }
 
