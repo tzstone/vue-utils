@@ -134,15 +134,11 @@ export default {
         }, {
           type: 'checkbox',
           field: 'checked',
-          options: [{
-            label: '备选项'
-          }]
+          innerText: '备选项'
         }, {
           type: 'checkbox',
           field: 'checked-label',
-          options: [{
-            label: '备选项 true-label'
-          }],
+          innerText: '备选项 true-label',
           props:{
             'true-label' : 1,
             'false-label': 0
