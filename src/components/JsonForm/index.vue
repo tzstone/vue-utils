@@ -3,41 +3,13 @@
       <el-form-item class="prefix-form-item">
         <el-button v-for="(item, index) in (schema.prefixBtns || [])" :key="index" :icon="item.icon" @click="(e) => item.click(e)">{{ item.innerText }}</el-button>
       </el-form-item>
-      <!-- eslint-disable-next-line vue/no-use-v-if-with-v-for -->
-      <el-form-item v-for="(item, index) in formItems" v-if="item.display" :key="index" :label="item.label" :prop="item.field">
-        <!-- select -->
-        <template v-if="item.type==='select'">
-          <el-select v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on" >
-            <el-option
-              v-for="(t, i) in optionsMap[item.field]"
-              :key="i"
-              :label="t[item.optionKey.label]"
-              :value="t[item.optionKey.value]"/>
-          </el-select>
+
+      <formItem v-for="(item, index) in schema.formItems" :key="index" v-model="form" :config="item" >
+        <template v-if="item.type==='slot'">
+          <slot :slot="item.field" :name="item.field"></slot>
         </template>
-        <!-- checkbox -->
-        <template v-else-if="item.type==='checkbox'">
-          <el-checkbox v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on">{{ item.innerText }}</el-checkbox>
-        </template>
-        <!-- checkbox-group -->
-        <template v-else-if="item.type==='checkboxGroup'">
-          <el-checkbox-group v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on">
-            <el-checkbox v-for="(t, i) in optionsMap[item.field]" :key="i" :label="t[item.optionKey.value]">{{ t[item.optionKey.label] }}</el-checkbox>
-          </el-checkbox-group>
-        </template>
-         <!-- upload -->
-         <template v-else-if="item.type==='upload'">
-          <el-upload :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on">
-            <el-button size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-          </el-upload>
-        </template>
-        <!-- slot -->
-        <template v-else-if="item.type==='slot'">
-          <slot :name="item.field"></slot>
-        </template>
-        <component :is="item.component" v-else v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on" />
-      </el-form-item>
+      </formItem>
+     
       <el-form-item>
         <el-button v-if="schema.submitBtn" type="primary" @click="onSubmit">{{ schema.submitBtn.innerText || '查询' }}</el-button>
         <el-button v-if="schema.resetBtn" @click="onReset">{{ resetText }}</el-button>
@@ -46,13 +18,14 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, reactive, ref, watch } from '@vue/composition-api';
-import { isBoolean, isFunction, isPlainObject } from 'lodash-es';
+import { computed, defineComponent, PropType, ref } from '@vue/composition-api';
+import { isBoolean, isPlainObject } from 'lodash-es';
 
-import { getElementConfig } from './config';
-import { FormItem, RenderFormItem, RuntimeOptions, RuntimeShow, Schema } from './type';
+import formItem from './formItem.vue';
+import { Schema } from './type';
 export default defineComponent({
   name: 'JsonForm',
+  components: { formItem },
   props: {
     value: {
       type: Object as PropType<{ [key: string]: any }>,
@@ -71,54 +44,11 @@ export default defineComponent({
     }
   },
   setup(props, ctx) {
-    const optionsMap = reactive({})
     const formRef = ref(null)
     const form = computed({
       get: () => props.value,
       set: (val) => ctx.emit('update:value', val)
     })
-
-    const getFormItem = (config: FormItem) => {
-      const item: RenderFormItem = { ...config }
-      const { component, runtimeProps, props } = getElementConfig(item) || {}
-      
-      item.component = component
-      item.props = props
-      item.runtimeProps = runtimeProps
-
-      if (item.runtimeProps) {
-        watch(() => item.runtimeProps(form.value), () => {
-          item.props = Object.assign({}, item.props, (item.runtimeProps(form.value) || {}))
-        }, {
-          immediate: true
-        })
-      }
-
-      if (Array.isArray(item.options)) {
-        optionsMap[item.field] = Object.freeze(item.options)
-        delete item.options
-      } else if (isFunction(item.options)) {
-        watch(() => (item.options as RuntimeOptions)(form.value), async () => {
-          const options = await (item.options as RuntimeOptions)(form.value)
-          ctx.root.$set(optionsMap, item.field, Object.freeze(options))
-        }, { immediate: true })
-      }
-
-      item.optionKey = Object.assign({ label: 'label', value: 'value' }, item.optionKey || {})
-      
-      item.display = true
-      if (('show' in item) && !isFunction(item.show)) {
-        item.display = !!item.show
-      } else if (isFunction(item.show)) {
-        watch(() => (item.show as RuntimeShow)(form.value), (show) => {
-          item.display = !!show
-        }, { immediate: true })
-      }
-
-      return item
-    }
-
-    const formItems = props.schema.formItems.map(item => getFormItem(item))
 
     const rules = props.schema.formItems.reduce((result, item) => {
       if (!item.field) return result
@@ -158,9 +88,7 @@ export default defineComponent({
     return { 
       formRef,
       form,
-      formItems,
       rules,
-      optionsMap,
       onSubmit,
       onReset,
       resetText
@@ -176,35 +104,6 @@ export default defineComponent({
     .el-button:last-child{
       margin-right: 20px;
     }
-  }
-  ::v-deep {
-    .el-select, .el-date-editor{
-      width: 100%;
-    }
-    .el-form-item__content {
-      .el-upload-list__item {
-        width: 40px;
-        height: 40px;
-        display: inline-flex;
-        .el-icon-delete {
-          font-size: 14px;
-        }
-        .el-upload-list__item-status-label{
-          display: none;
-        }
-      }
-      .el-upload__tip {
-        margin-top: 5px;
-        line-height: 1;
-      }
-      .el-upload {
-        height: 32px;
-        width: unset;
-        line-height: unset;
-        border: none;
-      }
-    }
-    
   }
 }
 
