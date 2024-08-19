@@ -36,7 +36,10 @@ export interface FormItem {
     [key: string]: any;
   };
   class?: string;
-  col?: number; // 组件布局规则
+  // TODO: 组件布局规则
+  col?: {
+    span: number;
+  };
 }
 
 export interface RenderFormItem extends FormItem {
