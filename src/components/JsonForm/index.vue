@@ -1,28 +1,43 @@
 <template>
-    <el-form ref="formRef" class="json-form-wrap" :model="form" :rules="rules" label-width="auto" :inline="inline" :disabled="disabled" size="small" v-bind="$attrs" v-on="$listeners">
-      <el-form-item class="prefix-form-item">
-        <el-button v-for="(item, index) in (schema.prefixBtns || [])" :key="index" :icon="item.icon" @click="(e) => item.click(e)">{{ item.innerText }}</el-button>
-      </el-form-item>
+  <el-form ref="formRef" class="json-form-wrap" :model="form" :rules="rules" label-width="auto" :inline="inline" :disabled="disabled" size="small" v-bind="$attrs" v-on="$listeners">
+    <el-form-item class="prefix-form-item">
+      <el-button v-for="(item, index) in (schema.prefixBtns || [])" :key="index" :icon="item.icon" @click="(e) => item.click(e)">{{ item.innerText }}</el-button>
+    </el-form-item>
 
+    <template v-if="isMultiColumn">
+      <el-row v-for="(row, i) in rows" :key="i" :gutter="20">
+        <el-col v-for="(item, index) in row" :key="index" :span="item.col.span">
+          <formItem :key="index" v-model="form" :config="item" >
+            <template v-if="item.type==='slot'">
+              <slot :slot="item.field" :name="item.field"></slot>
+            </template>
+          </formItem>
+        </el-col>
+      </el-row>
+    </template>
+    <template v-else>
       <formItem v-for="(item, index) in schema.formItems" :key="index" v-model="form" :config="item" >
         <template v-if="item.type==='slot'">
           <slot :slot="item.field" :name="item.field"></slot>
         </template>
       </formItem>
-     
-      <el-form-item>
-        <el-button v-if="schema.submitBtn" type="primary" @click="onSubmit">{{ schema.submitBtn.innerText || '查询' }}</el-button>
-        <el-button v-if="schema.resetBtn" @click="onReset">{{ resetText }}</el-button>
-      </el-form-item>
-    </el-form>
+    </template>
+
+    <el-form-item v-if="schema.submitBtn || schema.resetBtn">
+      <el-button v-if="schema.submitBtn" type="primary" @click="onSubmit">{{ schema.submitBtn.innerText || '查询' }}</el-button>
+      <el-button v-if="schema.resetBtn" @click="onReset">{{ resetText }}</el-button>
+    </el-form-item>
+
+  </el-form>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from '@vue/composition-api';
-import { isBoolean, isPlainObject } from 'lodash-es';
+import { isBoolean, isPlainObject, sumBy } from 'lodash-es';
 
 import formItem from './formItem.vue';
 import { Schema } from './type';
+
 export default defineComponent({
   name: 'JsonForm',
   components: { formItem },
@@ -49,6 +64,29 @@ export default defineComponent({
       get: () => props.value,
       set: (val) => ctx.emit('update:value', val)
     })
+
+    const isMultiColumn = props.schema.formItems.some(item => item.col)
+    let rows = ref([])
+    // row group
+    if (isMultiColumn) {
+      rows.value = props.schema.formItems.reduce((result, item) => {
+        if (!item.col?.span) throw new Error('必须配置col.span')
+
+        let lastRow = result.pop()
+        if (!lastRow) lastRow = []
+        const sumSpan = sumBy(lastRow, (t) => t.col.span)
+
+        if (sumSpan + item.col.span <= 24) {
+          lastRow.push(item)
+          result.push(lastRow)
+        } else {
+          result.push(lastRow)
+          result.push([item])
+        }
+        return result
+      }, [])
+    }
+
 
     const rules = props.schema.formItems.reduce((result, item) => {
       if (!item.field) return result
@@ -85,13 +123,15 @@ export default defineComponent({
       return ''
     })
 
-    return { 
+    return {
       formRef,
       form,
       rules,
+      rows,
       onSubmit,
       onReset,
-      resetText
+      resetText,
+      isMultiColumn
     }
   }
 })

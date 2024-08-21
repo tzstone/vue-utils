@@ -3,7 +3,7 @@
     <JsonForm v-model="form" :schema="schema">
       <template #rate>
         <el-rate v-model="form.rate"/>
-    </template>
+      </template>
     </JsonForm>
     <div>
       /-----------------------------------/
@@ -45,7 +45,8 @@ export default {
         rate: 3,
         checked: true,
         'checked-label': 1,
-        checkList: []
+        checkList: [],
+        file: 'https://th.bing.com/th/id/OIP.CUWUPQ1iFnys6EK3_6GWGgHaHZ?w=155&h=180&c=7&r=0&o=5&dpr=2&pid=1.7'
       },
       schema: {
         prefixBtns: [{
@@ -60,14 +61,14 @@ export default {
           click: () => {
             alert('分享')
           }
-        }], 
+        }],
         formItems: [{
           type: 'select',
           field: 'name',
           runtimeProps: (form) => {
-              return {
-                disabled: form.age == 21
-              }
+            return {
+              disabled: form.age == 21
+            }
           },
           options: [{
             name: 'zhang san',
@@ -79,36 +80,45 @@ export default {
           optionKey: {
             label: 'name',
             value: 'id'
-          }
+          },
+          col: {
+            span: 24
+          },
         },
         {
           type: 'select',
           field: 'province',
+          col: {
+            span: 12
+          },
           options: [{
             label: '广东',
             value: 'guangdong'
           }, {
             label: '广西',
             value: 'guangxi'
-          }]
+          }],
         },
         {
           type: 'select',
           field: 'city',
+          col: {
+            span: 12
+          },
           options: (form) => {
             const citys = form.province === 'guangdong' ? [{
-                  label: '深圳',
-                  value: 'shenzhen'
-                },{
-                  label: '广州',
-                  value: 'guangzhou'
-                }] : [{
-                  label: '南宁',
-                  value: 'nanning'
-                },{
-                  label: '梧州',
-                  value: 'wuzhou'
-                }]
+              label: '深圳',
+              value: 'shenzhen'
+            },{
+              label: '广州',
+              value: 'guangzhou'
+            }] : [{
+              label: '南宁',
+              value: 'nanning'
+            },{
+              label: '梧州',
+              value: 'wuzhou'
+            }]
 
             return new Promise((resolve) => {
               setTimeout(() => {
@@ -120,21 +130,36 @@ export default {
         },
         {
           type: 'input',
-          field: 'age'
+          field: 'age',
+          col: {
+            span: 8
+          },
         }, {
           type: 'search',
-          field: 'searchKey'
-        }, 
+          field: 'searchKey',
+          col: {
+            span: 8
+          },
+        },
         {
           type: 'date',
-          field: 'date'
+          field: 'date',
+          col: {
+            span: 8
+          },
         }, {
           type: 'dateRange',
-          field: 'dateRange'
+          field: 'dateRange',
+          col: {
+            span: 24
+          },
         }, {
           type: 'checkbox',
           field: 'checked',
-          innerText: '备选项'
+          innerText: '备选项',
+          col: {
+            span: 12
+          },
         }, {
           type: 'checkbox',
           field: 'checked-label',
@@ -142,10 +167,16 @@ export default {
           props:{
             'true-label' : 1,
             'false-label': 0
-          }
+          },
+          col: {
+            span: 12
+          },
         }, {
           type: 'checkboxGroup',
           field: 'checkList',
+          col: {
+            span: 12
+          },
           options: (form) => {
             return new Promise((resolve) => {
               setTimeout(() => {
@@ -159,13 +190,30 @@ export default {
               })
             })
           }
-        }, {
+        },
+        {
+          type: 'upload',
+          field: 'file',
+          props: {
+            onChange: (files, fileList) => {
+              debugger
+            }
+          },
+          col: {
+            span: 12
+          },
+        },
+        {
           type: 'slot',
           field: 'rate',
           show: (form) => {
             return form.checked
-          }
-        }],
+          },
+          col: {
+            span: 12
+          },
+        }
+        ],
         submitBtn: {
           click: ()=> {
             alert('查询')
