@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="formRef" class="json-form-wrap" :model="form" :rules="rules" label-width="auto" :inline="inline" :disabled="disabled" size="small" v-bind="$attrs" v-on="$listeners">
+  <el-form ref="formRef" class="json-form-wrap" :model="form" label-width="auto" :inline="inline" :disabled="disabled" size="small" v-bind="$attrs" v-on="$listeners">
     <el-form-item class="prefix-form-item">
       <el-button v-for="(item, index) in (schema.prefixBtns || [])" :key="index" :icon="item.icon" @click="(e) => item.click(e)">{{ item.innerText }}</el-button>
     </el-form-item>
@@ -87,33 +87,34 @@ export default defineComponent({
       }, [])
     }
 
-
-    const rules = props.schema.formItems.reduce((result, item) => {
-      if (!item.field) return result
-
-      item.rules && (result[item.field] = item.rules)
-
-      if (item.required && !result[item.field]) {
-        result[item.field] = [{ required: true, trigger: 'change' }]
-      }
-
-      return result
-    }, {})
-
     const onSubmit = (e) => {
-      if (props.schema.submitBtn?.click) {
-        props.schema.submitBtn.click(e)
-      }
+      validate(() => {
+        if (props.schema.submitBtn?.click) {
+          props.schema.submitBtn.click(e)
+        }
+      })
     }
 
     const onReset = (e) => {
-      formRef.resetFields()
+      resetForm()
 
       // @ts-ignore
       if (typeof props.schema.resetBtn?.click === 'function') {
         // @ts-ignore
         props.schema.resetBtn.click(e)
       }
+    }
+
+    const resetForm = () => {
+      formRef.value.resetFields()
+    }
+
+    const validate = (callback) => {
+      formRef.value.validate((valid) => {
+        if (valid) {
+          callback?.()
+        }
+      })
     }
 
     const resetText = computed(() => {
@@ -126,12 +127,13 @@ export default defineComponent({
     return {
       formRef,
       form,
-      rules,
       rows,
       onSubmit,
       onReset,
       resetText,
-      isMultiColumn
+      isMultiColumn,
+      resetForm,
+      validate
     }
   }
 })

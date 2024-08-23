@@ -1,5 +1,5 @@
 <template>
-  <el-form-item v-if="item.display" :label="item.label" :prop="item.field">
+  <el-form-item v-if="item.display" :label="item.label" :prop="item.field" :rules="item.rules" :required="item.required">
     <!-- select -->
     <template v-if="item.type==='select'">
       <el-select v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on" >

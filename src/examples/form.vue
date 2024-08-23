@@ -5,7 +5,11 @@
         <el-rate v-model="form.rate"/>
       </template>
     </JsonForm>
+
+    <el-button @click="visible=true">showdialog</el-button>
+    <JsonDialog :form="form" :visible.sync="visible" :schema="schema" @submit="onSubmit" @cancel="onCancel"/>
     <div>
+
       /-----------------------------------/
     </div>
     <button @click="emit">emit</button>
@@ -19,21 +23,22 @@
     <el-button @click="addArrayItem">addArrayItem</el-button>
     <el-button @click="changeArray">changeArray</el-button>
     <el-button @click="log">log</el-button>
-
-
   </div>
 </template>
 
 <script>
-import JsonForm from '@/components/JsonForm/index';
+import JsonDialog from '@/components/JsonDialog/index.vue';
+import JsonForm from '@/components/JsonForm/index.vue';
 import { mapFields } from '@/utils';
 
 export default {
   components: {
-    JsonForm
+    JsonForm,
+    JsonDialog
   },
   data() {
     return {
+      visible: false,
       form: {
         name: '111',
         age: 21,
@@ -137,9 +142,11 @@ export default {
         }, {
           type: 'search',
           field: 'searchKey',
+          label: '搜索',
           col: {
             span: 8
           },
+          required: true
         },
         {
           type: 'date',
@@ -270,6 +277,12 @@ export default {
     },
     log() {
       console.log(this.$store.state.form.arr)
+    },
+    onSubmit() {
+      this.visible = false
+    },
+    onCancel() {
+      this.visible = false
     }
   }
 }
