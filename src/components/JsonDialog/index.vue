@@ -5,8 +5,7 @@
     :visible.sync="visible"
     width="600px"
     :before-close="handleClose">
-    <!-- eslint-disable-next-line vue/no-mutating-props -->
-    <JsonForm ref="form" v-model="form" :schema="schema"/>
+    <slot></slot>
     <span slot="footer" class="dialog-footer">
       <el-button @click="onCancel">取 消</el-button>
       <el-button type="primary" @click="onSubmit">确 定</el-button>
@@ -15,26 +14,25 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api';
+import { defineComponent } from '@vue/composition-api';
 
-import JsonForm from '../JsonForm/index.vue';
-import { Schema } from '../JsonForm/type';
+import emitter from '@/mixins/emitter';
 
 export default defineComponent({
   name: 'JsonDialog',
-  components: { JsonForm },
+  components: {
+  },
+  mixins: [emitter],
   props: {
     visible: {
       type: Boolean,
       default: false
     },
-    form: {
-      type: Object as PropType<{ [key: string]: any }>,
-      default: () => {}
-    },
-    schema: {
-      type: Object as PropType<Schema>,
-    },
+    // 是否使用jsonform
+    useForm: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {
@@ -42,17 +40,26 @@ export default defineComponent({
   },
   methods: {
     handleClose(){
+      if (this.useForm) {
+        this.broadcast('JsonForm', 'resetForm')
+      }
       this.$emit('update:visible', false)
     },
     onCancel() {
-      this.$refs['form'].resetForm()
+      if (this.useForm) {
+        this.broadcast('JsonForm', 'resetForm')
+      }
       this.$emit('cancel')
     },
     onSubmit() {
-      this.$refs['form'].validate(() => {
+      if (this.useForm) {
+        this.broadcast('JsonForm', 'validate', () => {
+          this.$emit('submit')
+        })
+      } else {
         this.$emit('submit')
-      })
-    }
+      }
+    },
   }
 })
 </script>

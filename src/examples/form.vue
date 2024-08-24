@@ -7,7 +7,13 @@
     </JsonForm>
 
     <el-button @click="visible=true">showdialog</el-button>
-    <JsonDialog :form="form" :visible.sync="visible" :schema="schema" @submit="onSubmit" @cancel="onCancel"/>
+    <JsonDialog :visible.sync="visible" :use-form="true" @submit="onSubmit" @cancel="onCancel">
+      <JsonForm v-model="form" :schema="schema">
+        <template #rate>
+          <el-rate v-model="form.rate"/>
+        </template>
+      </JsonForm>
+    </JsonDialog>
     <div>
 
       /-----------------------------------/

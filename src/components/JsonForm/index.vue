@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, ref } from '@vue/composition-api';
+import { computed, defineComponent, getCurrentInstance, onMounted, onUnmounted, PropType, ref } from '@vue/composition-api';
 import { isBoolean, isPlainObject, sumBy } from 'lodash-es';
 
 import formItem from './formItem.vue';
@@ -122,6 +122,17 @@ export default defineComponent({
       // @ts-ignore
       else if (isPlainObject(props.schema.resetBtn)) return props.schema.resetBtn.innerText || '重置'
       return ''
+    })
+
+    const { proxy } = getCurrentInstance()
+    onMounted(() => {
+      proxy.$on('resetForm', resetForm)
+      proxy.$on('validate', validate)
+    })
+
+    onUnmounted(() => {
+      proxy.$off('resetForm', resetForm)
+      proxy.$off('validate', validate)
     })
 
     return {
