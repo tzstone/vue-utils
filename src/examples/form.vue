@@ -15,7 +15,6 @@
       </JsonForm>
     </JsonDialog>
     <div>
-
       /-----------------------------------/
     </div>
     <button @click="emit">emit</button>
