@@ -143,8 +143,6 @@ export default defineComponent({
       onReset,
       resetText,
       isMultiColumn,
-      resetForm,
-      validate
     }
   }
 })
