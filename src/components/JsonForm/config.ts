@@ -60,18 +60,12 @@ const defElementConfig = {
   },
 };
 
-export function getElementConfig(item: FormItem) {
-  const { type, field } = item;
-  const { component, props: defProps } = defElementConfig[type] || {};
-  const props = Object.assign({}, defProps || {}, item.props || {});
-  let runtimeProps = item.runtimeProps;
-
-  if (type === 'upload') {
-    if (props.limit == 1 && !runtimeProps) {
-      runtimeProps = (form) => {
-        if (form[field]) {
-          return { fileList: [{ url: form[field] }] };
-        }
+const enhanceConfig = {
+  upload: (item: FormItem, props, form) => {
+    const { field } = item;
+    if (props.limit == 1 && !item.runtimeProps) {
+      item.runtimeProps = (form) => {
+        return { fileList: form[field] ? [{ url: form[field] }] : [] };
       };
     }
 
@@ -82,18 +76,29 @@ export function getElementConfig(item: FormItem) {
         if (!isLtSize) {
           Message.warning(`上传文件大小不能超过 ${props.maxSize}KB!`);
           fileList.pop();
-        } else {
-          rawOnChange?.(file, fileList);
+          return;
         }
+
+        rawOnChange?.(file, fileList);
       };
     }
 
-    if (!props['onExceed']) {
+    if (props.limit && !props['onExceed']) {
       props['onExceed'] = (files, fileList) => {
         Message.warning(`超出文件个数限制, 当前限制${props.limit}个文件`);
       };
     }
-  }
+  },
+};
+
+export function getElementConfig(item: FormItem, form) {
+  const { type } = item;
+  const { component, props: defProps } = defElementConfig[type] || {};
+  const props = Object.assign({}, defProps || {}, item.props || {});
+
+  enhanceConfig[type]?.(item, props, form);
+
+  const runtimeProps = item.runtimeProps;
 
   return {
     component,

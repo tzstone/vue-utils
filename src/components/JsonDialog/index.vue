@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent, getCurrentInstance, provide, ref } from '@vue/composition-api';
 
 import emitter from '@/mixins/emitter';
 
@@ -28,38 +28,42 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
-    // 是否使用jsonform
-    useForm: {
-      type: Boolean,
-      default: false
-    }
   },
-  data () {
-    return {
+  setup(props, ctx) {
+    const { proxy } = getCurrentInstance()
+    const useForm = ref(false)
+    const handleClose = () => {
+      if (useForm.value) {
+        (proxy as any).broadcast('JsonForm', 'resetForm')
+      }
+      ctx.emit('update:visible', false)
     }
-  },
-  methods: {
-    handleClose(){
-      if (this.useForm) {
-        this.broadcast('JsonForm', 'resetForm')
+
+    const onCancel = () => {
+      if (useForm.value) {
+        (proxy as any).broadcast('JsonForm', 'resetForm')
       }
-      this.$emit('update:visible', false)
-    },
-    onCancel() {
-      if (this.useForm) {
-        this.broadcast('JsonForm', 'resetForm')
-      }
-      this.$emit('cancel')
-    },
-    onSubmit() {
-      if (this.useForm) {
-        this.broadcast('JsonForm', 'validate', () => {
-          this.$emit('submit')
+      ctx.emit('cancel')
+    }
+
+    const onSubmit = () => {
+      if (useForm.value) {
+        (proxy as any).broadcast('JsonForm', 'validate', () => {
+          ctx.emit('submit')
         })
       } else {
-        this.$emit('submit')
+        ctx.emit('submit')
       }
-    },
+    }
+
+    provide('inDialog', true)
+    provide('setUseForm', (use) => useForm.value = use)
+
+    return {
+      handleClose,
+      onCancel,
+      onSubmit
+    }
   }
 })
 </script>

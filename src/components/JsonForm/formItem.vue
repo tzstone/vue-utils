@@ -63,7 +63,7 @@ export default defineComponent({
     })
 
     const item: RenderFormItem = reactive({ ...{ props: {},display: true },...props.config })
-    const { component, runtimeProps, props: defProps } = getElementConfig(item) || {}
+    const { component, runtimeProps, props: defProps } = getElementConfig(item, form.value) || {}
 
     item.props = defProps
     item.component = component
@@ -127,7 +127,7 @@ export default defineComponent({
         line-height: 1;
       }
       .el-upload {
-        height: 32px;
+        height: 38px;
         width: unset;
         line-height: unset;
         border: none;

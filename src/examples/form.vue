@@ -7,8 +7,8 @@
     </JsonForm>
 
     <el-button @click="visible=true">showdialog</el-button>
-    <JsonDialog :visible.sync="visible" :use-form="true" @submit="onSubmit" @cancel="onCancel">
-      <JsonForm v-model="form" :schema="schema">
+    <JsonDialog :visible.sync="visible" @submit="onSubmit" @cancel="onCancel">
+      <JsonForm v-model="form" :schema="dialogSchema">
         <template #rate>
           <el-rate v-model="form.rate"/>
         </template>
@@ -59,6 +59,144 @@ export default {
         file: 'https://th.bing.com/th/id/OIP.CUWUPQ1iFnys6EK3_6GWGgHaHZ?w=155&h=180&c=7&r=0&o=5&dpr=2&pid=1.7'
       },
       schema: {
+        prefixBtns: [{
+          icon: 'el-icon-search',
+          innerText: '搜索',
+          click: () => {
+            alert('搜索')
+          }
+        }, {
+          icon: 'el-icon-share',
+          innerText: '分享',
+          click: () => {
+            alert('分享')
+          }
+        }],
+        formItems: [{
+          type: 'select',
+          field: 'name',
+          runtimeProps: (form) => {
+            return {
+              disabled: form.age == 21
+            }
+          },
+          options: [{
+            name: 'zhang san',
+            id: '111'
+          },{
+            name: 'li shi',
+            id: '222'
+          }],
+          optionKey: {
+            label: 'name',
+            value: 'id'
+          },
+        },
+        {
+          type: 'select',
+          field: 'province',
+          options: [{
+            label: '广东',
+            value: 'guangdong'
+          }, {
+            label: '广西',
+            value: 'guangxi'
+          }],
+        },
+        {
+          type: 'select',
+          field: 'city',
+          options: (form) => {
+            const citys = form.province === 'guangdong' ? [{
+              label: '深圳',
+              value: 'shenzhen'
+            },{
+              label: '广州',
+              value: 'guangzhou'
+            }] : [{
+              label: '南宁',
+              value: 'nanning'
+            },{
+              label: '梧州',
+              value: 'wuzhou'
+            }]
+
+            return new Promise((resolve) => {
+              setTimeout(() => {
+                resolve(citys)
+                form.city = citys[0].value
+              }, 1000)
+            })
+          }
+        },
+        {
+          type: 'input',
+          field: 'age',
+        }, {
+          type: 'search',
+          field: 'searchKey',
+          // label: '搜索',
+          required: true
+        },
+        {
+          type: 'date',
+          field: 'date',
+        }, {
+          type: 'dateRange',
+          field: 'dateRange',
+        }, {
+          type: 'checkbox',
+          field: 'checked',
+          innerText: '备选项',
+        }, {
+          type: 'checkbox',
+          field: 'checked-label',
+          innerText: '备选项 true-label',
+          props:{
+            'true-label' : 1,
+            'false-label': 0
+          },
+        }, {
+          type: 'checkboxGroup',
+          field: 'checkList',
+          options: (form) => {
+            return new Promise((resolve) => {
+              setTimeout(() => {
+                resolve([{
+                  label: '复选框 A',
+                  value: 'A'
+                }, {
+                  label: '复选框 B',
+                  value: 'B'
+                }])
+              })
+            })
+          }
+        },
+        {
+          type: 'upload',
+          field: 'file',
+          props: {
+            onChange: (files, fileList) => {
+              debugger
+            }
+          },
+        },
+        {
+          type: 'slot',
+          field: 'rate',
+          show: (form) => {
+            return form.checked
+          },
+        }
+        ],
+        submitBtn: {
+          click: ()=> {
+            alert('查询')
+          }
+        }
+      },
+      dialogSchema:{
         prefixBtns: [{
           icon: 'el-icon-search',
           innerText: '搜索',
@@ -147,7 +285,7 @@ export default {
         }, {
           type: 'search',
           field: 'searchKey',
-          label: '搜索',
+          // label: '搜索',
           col: {
             span: 8
           },
@@ -231,7 +369,7 @@ export default {
             alert('查询')
           }
         }
-      }
+      },
     }
   },
   watch: {

@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="formRef" class="json-form-wrap" :model="form" label-width="auto" :inline="inline" :disabled="disabled" size="small" v-bind="$attrs" v-on="$listeners">
+  <el-form ref="formRef" class="json-form-wrap" :model="form" label-width="auto" :inline="inlineMode" :disabled="disabled" size="small" v-bind="$attrs" v-on="$listeners">
     <el-form-item class="prefix-form-item">
       <el-button v-for="(item, index) in (schema.prefixBtns || [])" :key="index" :icon="item.icon" @click="(e) => item.click(e)">{{ item.innerText }}</el-button>
     </el-form-item>
@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, getCurrentInstance, onMounted, onUnmounted, PropType, ref } from '@vue/composition-api';
+import { computed, defineComponent, getCurrentInstance, inject, onMounted, onUnmounted, PropType, ref } from '@vue/composition-api';
 import { isBoolean, isPlainObject, sumBy } from 'lodash-es';
 
 import formItem from './formItem.vue';
@@ -51,7 +51,7 @@ export default defineComponent({
     },
     inline: {
       type: Boolean,
-      default: false
+      default: null
     },
     disabled: {
       type: Boolean,
@@ -59,6 +59,12 @@ export default defineComponent({
     }
   },
   setup(props, ctx) {
+    const inDialog = inject('inDialog', null)
+    const inlineMode = props.inline != null ? props.inline : inDialog? false : true
+
+    const setUseForm = inject('setUseForm', null)
+    if (setUseForm) setUseForm(true)
+
     const formRef = ref(null)
     const form = computed({
       get: () => props.value,
@@ -143,6 +149,7 @@ export default defineComponent({
       onReset,
       resetText,
       isMultiColumn,
+      inlineMode
     }
   }
 })
