@@ -34,14 +34,14 @@ export default defineComponent({
     const useForm = ref(false)
     const handleClose = () => {
       if (useForm.value) {
-        (proxy as any).broadcast('JsonForm', 'resetForm')
+        (proxy as any).broadcast('JsonForm', 'clearForm')
       }
       ctx.emit('update:visible', false)
     }
 
     const onCancel = () => {
       if (useForm.value) {
-        (proxy as any).broadcast('JsonForm', 'resetForm')
+        (proxy as any).broadcast('JsonForm', 'clearForm')
       }
       ctx.emit('cancel')
     }

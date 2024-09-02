@@ -115,6 +115,10 @@ export default defineComponent({
       formRef.value.resetFields()
     }
 
+    const clearForm = () => {
+      formRef.value.clearValidate()
+    }
+
     const validate = (callback) => {
       formRef.value.validate((valid) => {
         if (valid) {
@@ -133,11 +137,13 @@ export default defineComponent({
     const { proxy } = getCurrentInstance()
     onMounted(() => {
       proxy.$on('resetForm', resetForm)
+      proxy.$on('clearForm', clearForm)
       proxy.$on('validate', validate)
     })
 
     onUnmounted(() => {
       proxy.$off('resetForm', resetForm)
+      proxy.$off('clearForm', clearForm)
       proxy.$off('validate', validate)
     })
 
