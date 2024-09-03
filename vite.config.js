@@ -16,6 +16,16 @@ export default defineConfig({
       iconDirs: [path.resolve(process.cwd(), 'src/assets/svg')],
       // Specify symbolId format
       symbolId: 'icon-[name]',
+      /**
+       * custom insert position
+       * @default: body-last
+       */
+      inject: 'body-first',
+      /**
+       * custom dom id
+       * @default: __svg__icons__dom__
+       */
+      customDomId: '__SVG_SPRITE_NODE__',
     }),
   ],
   base: './',
