@@ -7,8 +7,14 @@ import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
 import { createVuePlugin } from 'vite-plugin-vue2';
 
 export default defineConfig({
+  define: {
+    'process.env': process.env,
+  },
   plugins: [
-    createVuePlugin(),
+    createVuePlugin({
+      // template编译保留空格, 与webpack保持一致
+      compilerOptions: { whitespace: 'preserve' },
+    }),
     viteCommonjs(),
     ViteRequireContext(),
     createSvgIconsPlugin({
