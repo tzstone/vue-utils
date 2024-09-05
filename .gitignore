@@ -2,4 +2,4 @@
 /dist
 .yarn
 /doc
-dev.routerConfig.ts
+/dev.routerConfig.ts
