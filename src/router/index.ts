@@ -3,24 +3,28 @@ import Router from 'vue-router';
 
 import store from '@/store';
 
-const routes = [];
-const files = require.context('@/examples', false, /\.vue$/);
-files.keys().forEach((key) => {
-  const name = key.match(/\/(\w+)\.vue/)[1];
-  routes.push({
-    path: name === 'home' ? '/' : `/${name}`,
-    name: name,
-    component: files(key).default || files(key),
-    meta: {
-      keepAlive: ['page1', 'page2', 'page3'].includes(name),
-    },
-  });
-});
+import routes from './config';
+
+// eslint-disable-next-line no-debugger
+// const routes = [];
+// const routes = [];
+// const files = require.context('@/examples', false, /\.vue$/);
+// files.keys().forEach((key) => {
+//   const name = key.match(/\/(\w+)\.vue/)[1];
+//   routes.push({
+//     path: name === 'home' ? '/' : `/${name}`,
+//     name: name,
+//     component: files(key).default || files(key),
+//     meta: {
+//       keepAlive: ['page1', 'page2', 'page3'].includes(name),
+//     },
+//   });
+// });
 Vue.use(Router);
 
 const router = new Router({
   mode: 'hash',
-  routes,
+  routes: routes,
   scrollBehavior: function (to, from, savedPosition) {
     console.log('savedPosition', savedPosition);
     if (savedPosition || savedPosition === undefined) {
@@ -39,6 +43,6 @@ const router = new Router({
   },
 });
 
-window['router'] = router;
+// window['router'] = router;
 
 export default router;
