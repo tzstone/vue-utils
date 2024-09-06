@@ -7,7 +7,7 @@ import <%=item %> from '<%=deelRouteName(item) %>';
 let routesConfig: Array<RouteConfig> = [];
   routesConfig = [
     <% chooseModules.forEach(function(item){%>
-      <%=item %>,
+      ...<%=item %>,
     <% }) %>
   ]
 

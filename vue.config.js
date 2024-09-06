@@ -14,15 +14,7 @@ module.exports = {
   productionSourceMap: false,
   runtimeCompiler: true,
   configureWebpack: (config) => {
-    if (process.env.NODE_ENV === 'development') {
-      config.plugins.push(
-        new SpeedMeasurePlugin(),
-        new HardSourceWebpackPlugin(),
-        new webpack.NormalModuleReplacementPlugin(/src\/router\/config.ts/, '../../dev.routerConfig.ts')
-      );
-    }
-
-    return {
+    const options = {
       resolve: {
         alias: {
           '@': path.resolve(__dirname, 'src'),
@@ -30,6 +22,16 @@ module.exports = {
       },
       plugins: [new WorkerPlugin()],
     };
+
+    if (process.env.NODE_ENV === 'development') {
+      options.plugins.push(
+        new SpeedMeasurePlugin(),
+        new HardSourceWebpackPlugin(),
+        new webpack.NormalModuleReplacementPlugin(/src\/router\/config\.ts/, '../../dev.routerConfig.ts')
+      );
+    }
+
+    return options;
   },
   chainWebpack(config) {
     // set svg-sprite-loader

@@ -12,12 +12,15 @@ const moduleConfig = ['home', 'icon', 'theme'];
 const chooseModules = [];
 
 function deelRouteName(name) {
+  let routeName = name;
+
   const index = name.search(/[A-Z]/g);
-  const preRoute = '' + path.resolve(__dirname, '../src/router/modules/') + '/';
   if (![0, -1].includes(index)) {
-    return preRoute + (name.slice(0, index) + '-' + name.slice(index)).toLowerCase();
+    routeName = name.slice(0, index) + '-' + name.slice(index);
   }
-  return preRoute + name.toLowerCase();
+
+  const routePath = `./src/router/modules/${routeName.toLowerCase()}`;
+  return routePath;
 }
 
 function init() {

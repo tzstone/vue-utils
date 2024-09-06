@@ -1,5 +1,7 @@
-export default {
-  path: '/icon',
-  name: 'icon',
-  component: () => import('@/examples/icon.vue'),
-};
+export default [
+  {
+    path: '/icon',
+    name: 'icon',
+    component: () => import('@/examples/icon.vue'),
+  },
+];
