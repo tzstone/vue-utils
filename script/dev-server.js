@@ -19,7 +19,7 @@ function deelRouteName(name) {
     routeName = name.slice(0, index) + '-' + name.slice(index);
   }
 
-  const routePath = `./src/router/modules/${routeName.toLowerCase()}`;
+  const routePath = `./modules/${routeName.toLowerCase()}`;
   return routePath;
 }
 
@@ -45,7 +45,7 @@ const getContenTemplate = async () => {
     { chooseModules, deelRouteName },
     { async: true }
   );
-  fs.writeFileSync(path.resolve(__dirname, '../dev.routerConfig.ts'), html);
+  fs.writeFileSync(path.resolve(__dirname, '../src/router/dev.config.ts'), html);
 };
 
 function promptModule() {

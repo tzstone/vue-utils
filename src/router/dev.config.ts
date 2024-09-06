@@ -2,14 +2,14 @@
 import { RouteConfig } from 'vue-router';
 
 
-import home from './src/router/modules/home';
+import icon from './modules/icon';
 
-import theme from './src/router/modules/theme';
+import theme from './modules/theme';
 
 let routesConfig: Array<RouteConfig> = [];
   routesConfig = [
     
-      ...home,
+      ...icon,
     
       ...theme,
     
