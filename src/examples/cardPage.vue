@@ -13,8 +13,8 @@
 
 <script>
 export default {
+  inject: ['renderCard'],
   props:{
-    renderCard: Function,
     list: {
       type: Array,
       default: () => ['bbb']
