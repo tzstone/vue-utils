@@ -13,6 +13,9 @@ export default {
   created() {
     console.log('created b', Date.now())
   },
+  destroyed() {
+    console.log('b destroyed')
+  },
   methods: {}
 }
 </script>

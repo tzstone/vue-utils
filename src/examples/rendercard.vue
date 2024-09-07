@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent, onUnmounted } from '@vue/composition-api';
 import Vue from 'vue';
 
 const cardComp = () => import('./cardComp.vue')
@@ -29,6 +29,7 @@ export default defineComponent({
     type: String
   },
   setup(props, ctx) {
+    const vmList = []
     const renderCard = (el, options: {cardId: String, props: any, on:any,}) => {
       const vm = new Vue({
         el,
@@ -40,13 +41,23 @@ export default defineComponent({
           })
         },
       })
+      vmList.push(vm)
       const methods = {
         update: (props) => {
           (vm as any).$refs['card'].updateContext(props)
+        },
+        destroy() {
+          vm.$destroy()
         }
       }
       return methods
     }
+
+    onUnmounted(() => {
+      vmList.forEach(vm => {
+        vm.$destroy()
+      })
+    })
 
     return {
       renderCard,

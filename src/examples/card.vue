@@ -1,5 +1,6 @@
 <template>
   <div class="card" @click="$emit('click')">
+    <button @click="goHome">go home</button>
     i am card, cardname: {{ cardname }}
     <cardComp :type="$route.query.type" :list="list"/>
   </div>
@@ -28,7 +29,9 @@ export default {
 
   },
   methods: {
-
+    goHome() {
+      this.$router.push('/home')
+    }
   }
 }
 </script>

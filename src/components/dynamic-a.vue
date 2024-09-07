@@ -37,6 +37,9 @@ export default {
   created() {
     console.log('created a', Date.now())
   },
+  destroyed() {
+    console.log('a destroyed')
+  },
   methods: {
     handler(res) {}
   }

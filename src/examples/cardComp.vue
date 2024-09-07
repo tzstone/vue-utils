@@ -16,6 +16,12 @@ export default {
       age: 18
     }
   },
+  created() {
+    console.log('Cardcomp created')
+  },
+  destroyed() {
+    console.log('Cardcomp destroyed')
+  },
   methods: {
     updateContext(props) {
       console.log(this.type, 'update', props)
