@@ -1,7 +1,7 @@
 <template>
   <div>
     {{ msg }}
-    <el-input v-model="myvalue.value" />
+    <!-- <el-input v-model="myvalue.value" /> -->
   </div>
 </template>
 

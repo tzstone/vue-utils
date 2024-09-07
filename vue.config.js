@@ -26,8 +26,8 @@ module.exports = {
     if (process.env.NODE_ENV === 'development') {
       options.plugins.push(
         new SpeedMeasurePlugin(),
-        new HardSourceWebpackPlugin(),
-        new webpack.NormalModuleReplacementPlugin(/src\/router\/config\.ts/, './dev.config.ts')
+        new HardSourceWebpackPlugin()
+        // new webpack.NormalModuleReplacementPlugin(/src\/router\/config\.ts/, './dev.config.ts')
       );
     }
 
