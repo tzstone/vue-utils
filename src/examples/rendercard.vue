@@ -30,14 +30,15 @@ export default defineComponent({
   },
   setup(props, ctx) {
     function renderCard (el, options: {cardId: String, props: any, on:any}, parent?) {
-      const self = parent || this
-      if (self._isVue===true) {
-        self.$once('hook:destroyed', () => {
+      if (this?._isVue===true) {
+        this.$once('hook:destroyed', () => {
           _destroy()
         })
+      } else {
+        throw new Error('调用renderCard时需将this绑定到当前vue实例')
       }
 
-      let _destroy = () => {
+      const _destroy = () => {
         vm.$destroy()
         vm = null
       }

@@ -11,37 +11,42 @@
   </div>
 </template>
 
-<script>
-export default {
-  inject: ['renderCard'],
+<script lang="ts">
+import { defineComponent, getCurrentInstance, inject, onMounted } from '@vue/composition-api';
+
+export default defineComponent({
+  name:'CardPage',
   props:{
     list: {
       type: Array,
       default: () => ['bbb']
     }
   },
-  data() {
-    return {
-      ins : {}
-    }
-  },
-  computed: {
+  setup(props, ctx) {
+    const ins = {}
+    const renderCard = inject<any>('renderCard')
 
-  },
-  mounted() {
-    this.list.forEach((type, index) => {
-      this.ins[index] = this.renderCard(this.$el.querySelector(`.card${index}`), { props: { type }})
-    });
-  },
-  methods: {
-    onClick(val) {
+    const onClick = (val) => {
       console.log('card', val)
-    },
-    onUpdated(val) {
-      this.ins[val].update({ value: val })
+    }
+
+    const onUpdated = (val) => {
+      ins[val].update({ value: val })
+    }
+
+    const { proxy }= getCurrentInstance()
+    onMounted(() => {
+      props.list.forEach((type, index) => {
+        ins[index] = renderCard.call(proxy, proxy.$el.querySelector(`.card${index}`), { props: { type }})
+      });
+    })
+
+    return {
+      onClick,
+      onUpdated
     }
   }
-}
+})
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
