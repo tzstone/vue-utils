@@ -1,7 +1,13 @@
 export default [
   {
-    path: '/home',
-    name: 'home',
-    component: () => import('@/examples/home.vue'),
+    path: '/',
+    component: () => import('@/components/empty.vue'),
+    children: [
+      {
+        path: '/home',
+        name: 'home',
+        component: () => import('@/examples/home.vue'),
+      },
+    ],
   },
 ];
