@@ -7,7 +7,7 @@
     </JsonForm>
 
     <el-button @click="visible=true">showdialog</el-button>
-    <JsonDialog :visible.sync="visible" @submit="onSubmit" @cancel="onCancel">
+    <JsonDialog :visible.sync="visible" :submit="onSubmit" @cancel="onCancel">
       <JsonForm v-model="form" :schema="dialogSchema">
         <template #rate>
           <el-rate v-model="form.rate"/>
@@ -422,7 +422,12 @@ export default {
       console.log(this.$store.state.form.arr)
     },
     onSubmit() {
-      this.visible = false
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(1)
+        }, 1000)
+      })
+      // this.visible = false
     },
     onCancel() {
       this.visible = false

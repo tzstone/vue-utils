@@ -8,7 +8,7 @@
     <slot></slot>
     <span slot="footer" class="dialog-footer">
       <el-button @click="onCancel">取 消</el-button>
-      <el-button type="primary" @click="onSubmit">确 定</el-button>
+      <el-button :loading="loading" type="primary" @click="onSubmit">确 定</el-button>
     </span>
   </el-dialog>
 </template>
@@ -28,10 +28,15 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
+    submit: {
+      type: Function,
+      default: null
+    }
   },
   setup(props, ctx) {
     const { proxy } = getCurrentInstance()
     const useForm = ref(false)
+    const loading = ref(false)
     const handleClose = () => {
       if (useForm.value) {
         (proxy as any).broadcast('JsonForm', 'clearForm')
@@ -46,15 +51,30 @@ export default defineComponent({
       ctx.emit('cancel')
     }
 
-    const onSubmit = () => {
-      if (useForm.value) {
-        (proxy as any).broadcast('JsonForm', 'validate', () => {
-          ctx.emit('submit')
-        })
-      } else {
+    const _submit = async () => {
+      if (props.submit) {
+        loading.value = true
+        try {
+          await props.submit()
+          ctx.emit('update:visible', false)
+        } finally {
+          loading.value = false
+        }
+      }else {
         ctx.emit('submit')
       }
     }
+
+    const onSubmit = () => {
+      if (useForm.value) {
+        (proxy as any).broadcast('JsonForm', 'validate', () => {
+          _submit()
+        })
+      } else {
+        _submit()
+      }
+    }
+
 
     provide('inDialog', true)
     provide('setUseForm', (use) => useForm.value = use)
@@ -62,7 +82,8 @@ export default defineComponent({
     return {
       handleClose,
       onCancel,
-      onSubmit
+      onSubmit,
+      loading
     }
   }
 })
