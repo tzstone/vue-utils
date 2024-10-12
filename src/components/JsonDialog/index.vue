@@ -41,6 +41,7 @@ export default defineComponent({
       if (useForm.value) {
         (proxy as any).broadcast('JsonForm', 'clearForm')
       }
+      ctx.emit('close')
       ctx.emit('update:visible', false)
     }
 
