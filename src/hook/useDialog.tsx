@@ -1,3 +1,4 @@
+import { onUnmounted } from '@vue/composition-api';
 import { cloneDeep } from 'lodash-es';
 import Vue from 'vue';
 
@@ -5,52 +6,71 @@ import JsonDialog from '@/components/JsonDialog/index.vue';
 import JsonForm, { Schema } from '@/components/JsonForm';
 import { getVueOptions } from '@/utils/vue';
 
-export function showDialog(options: { title: string; schema: Schema; form , onConfirm: (form) => Promise<any>, onClose?: (action: 'close' | 'cancel') => void}) {
+interface Options {
+  title: string;
+  schema: Schema;
+  form: any;
+  immediate?: boolean;
+  onConfirm: (form) => Promise<any>;
+  onClose?: (action: 'close' | 'cancel') => void;
+}
+
+export function useDialog(options: Options) {
+  options = Object.assign({ immediate: true }, options)
+
   const instanceOption = getVueOptions();
 
-  let instance = new Vue({
-    ...instanceOption,
-    el: document.createElement('div'),
-    data(){
-      return {
-        visible: false,
-        form: cloneDeep(options.form) // 不影响原有的form对象
-      }
-    },
-    render: function(h) {
-      const dialogAttrs = {
-        attrs: {
-          visible: this.visible,
-          submit: async () => {
-            await options.onConfirm(this.form)
-            this.visible = false
+  let instance
+
+  let open = () => {
+    if (instance) {
+      close()
+    }
+
+    instance  = new Vue({
+      ...instanceOption,
+      el: document.createElement('div'),
+      data(){
+        return {
+          visible: false,
+          form: cloneDeep(options.form) // 不影响原有的form对象
+        }
+      },
+      render: function(h) {
+        const dialogAttrs = {
+          attrs: {
+            visible: this.visible,
+            submit: async () => {
+              await options.onConfirm(this.form)
+              this.visible = false
+            },
           },
-        },
-        on: {
-          'update:visible': (visible) => this.visible = visible,
-          cancel: () => {
-            options.onClose('cancel');
-            close()
-          },
-          close: () => {
-            options.onClose('close')
-            close()
+          on: {
+            'update:visible': (visible) => this.visible = visible,
+            cancel: () => {
+              options.onClose('cancel');
+              close()
+            },
+            close: () => {
+              options.onClose('close')
+              close()
+            }
           }
         }
-      }
-      return (
-        <JsonDialog {...dialogAttrs} >
-          <JsonForm vModel={this.form} schema={options.schema}></JsonForm>
-        </JsonDialog>
-      )
-    },
-  });
+        return (
+          <JsonDialog {...dialogAttrs} >
+            <JsonForm vModel={this.form} schema={options.schema}></JsonForm>
+          </JsonDialog>
+        )
+      },
+    });
 
-  document.body.appendChild(instance.$el);
+    document.body.appendChild(instance.$el);
 
-  Vue.nextTick(() => {
-    instance.visible = true
-  })
+    Vue.nextTick(() => {
+      instance.visible = true
+    })
+  }
 
   let close = () => {
     instance.visible = false
@@ -59,10 +79,20 @@ export function showDialog(options: { title: string; schema: Schema; form , onCo
       document.body.removeChild(instance.$el);
       instance = null
       close = null
+      open = null
     })
   }
 
+  if (options.immediate) {
+    open()
+  }
+
+  onUnmounted(() => {
+    close()
+  })
+
   return {
-    close
+    close,
+    open
   }
 }

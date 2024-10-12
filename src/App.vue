@@ -16,43 +16,49 @@
 </template>
 
 <script>
-import emitter, { EmitterEvents } from '@/utils/emitter'
-export default {
+import { computed, defineComponent, onMounted, onUnmounted, ref } from '@vue/composition-api';
+
+import emitter, { EmitterEvents } from '@/utils/emitter';
+
+export default defineComponent({
   name: 'App',
-  data() {
-    return {
-      langs: [
-        {
-          label: 'English',
-          value: 'en'
-        },
-        {
-          label: '中文',
-          value: 'zh'
-        }
-      ]
-    }
-  },
-  computed: {
-    cachePageNames() {
-      return this.$store.state.common.cachePageNames
-    }
-  },
-  watch: {
-    $route: {
-      handler(route) {}
-    }
-  },
-  created() {
-    emitter.on(EmitterEvents.CLICK_OUTSIDE, e => {
-      console.log(e)
+  setup(props, ctx) {
+    const langs = ref([
+      {
+        label: 'English',
+        value: 'en'
+      },
+      {
+        label: '中文',
+        value: 'zh'
+      }
+    ])
+
+    const cachePageNames = computed(() => {
+      return ctx.root.$store.state.common.cachePageNames
     })
-  },
-  destroyed() {
-    emitter.off(EmitterEvents.CLICK_OUTSIDE)
-  },
-  methods: {}
-}
+
+    onMounted(() => {
+      emitter.on(EmitterEvents.CLICK_OUTSIDE, e => {
+        console.log(e)
+      })
+    })
+
+    onUnmounted(() => {
+      emitter.off(EmitterEvents.CLICK_OUTSIDE)
+    })
+
+    return {
+      langs,
+      cachePageNames
+    }
+  }
+
+
+
+
+
+})
 </script>
 
 <style>

@@ -8,7 +8,7 @@
 
     <el-button @click="visible=true">showdialog</el-button>
     <JsonDialog :visible.sync="visible" :submit="onSubmit" @cancel="onCancel">
-      <ElButton @click="showInnerDialog">showInnerDialog</ElButton>
+      <!-- <ElButton @click="showInnerDialog">showInnerDialog</ElButton> -->
       <JsonForm v-model="form" :schema="dialogSchema">
         <template #rate>
           <el-rate v-model="form.rate"/>
@@ -37,7 +37,6 @@ import { Button } from 'element-ui';
 
 import JsonDialog from '@/components/JsonDialog/index.vue';
 import JsonForm from '@/components/JsonForm/index.vue';
-import { showDialog } from '@/hook/useDialog';
 import { mapFields } from '@/utils';
 export default {
   components: {
@@ -374,9 +373,6 @@ export default {
           }
         }
       },
-      innerDialogForm: {
-        name: 'zhang'
-      }
     }
   },
   watch: {
@@ -439,23 +435,6 @@ export default {
     onCancel() {
       this.visible = false
     },
-    showInnerDialog() {
-      const { close } = showDialog({
-        title: 'test',
-        form: this.innerDialogForm,
-        schema: {
-          formItems: [{
-            field: 'name',
-            type: 'input'
-          }]
-        },
-        onConfirm: (form) => {
-          if (form.name != 'zhangsan') return Promise.reject()
-        },
-        onClose: (action) => {
-        }
-      })
-    }
   }
 }
 </script>
