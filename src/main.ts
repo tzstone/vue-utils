@@ -1,30 +1,15 @@
 import VueCompositionAPI from '@vue/composition-api';
 import Vue from 'vue';
 
-import { defSortImportAll, importAll } from '@/utils';
-
 // import 'windi.css'
 import App from './App.vue';
 import eventBus from './eventBus';
 import './styles/reset.css';
+import { getVueOptions } from './utils/vue';
 
-const instanceOption = {};
-const plugins = importAll(require.context('./plugins/', false, /\.(ts|js)$/), defSortImportAll);
+const instanceOption = getVueOptions();
 
-plugins.forEach((m) => {
-  const option = m.default || m;
-  if (option.vueInstanceOption) {
-    Object.keys(option.vueInstanceOption).forEach((key) => {
-      if (key === 'mixin') {
-        if (!instanceOption['mixins']) instanceOption['mixins'] = [];
-        instanceOption['mixins'].push(option.vueInstanceOption[key]);
-      } else {
-        instanceOption[key] = option.vueInstanceOption[key];
-      }
-    });
-  }
-});
-
+console.info('instanceOption', instanceOption);
 Vue.config.productionTip = false;
 Vue.use(VueCompositionAPI);
 Vue.use(eventBus);

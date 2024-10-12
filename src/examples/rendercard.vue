@@ -1,7 +1,7 @@
 <template>
   <div class="render-card">
     i am render-card
-    <component :is="type" v-bind="$attrs"/>
+    <component :is="type" v-bind="$attrs" />
     <!-- <cardPage :render-card="renderCard">
       <template #card="{props, on}">
         <card v-bind="props" v-on="on"/>
@@ -14,10 +14,13 @@
 import { defineComponent, provide } from '@vue/composition-api';
 import Vue from 'vue';
 
+import { getVueOptions } from '@/utils/vue';
+
 const cardComp = () => import('./cardComp.vue')
 const aaa = () => import('@/components/dynamic-a.vue')
 const bbb = () => import('@/components/dynamic-b.vue')
 const cardPage = () => import('./cardPage.vue')
+
 export default defineComponent({
   name: 'RenderCard',
   components: {
@@ -29,6 +32,8 @@ export default defineComponent({
     type: String
   },
   setup(props, ctx) {
+    const instanceOption = getVueOptions();
+
     function renderCard (el, options: {cardId: String, props: any, on:any}, parent?) {
       if (this?._isVue===true) {
         this.$once('hook:destroyed', () => {
@@ -43,8 +48,11 @@ export default defineComponent({
         vm = null
       }
 
+      console.info('rendercard instanceOption', instanceOption)
+
       let vm = new Vue({
         el,
+        ...instanceOption,
         render(createElement, hack) {
           return createElement(cardComp, {
             props: options.props,
