@@ -114,9 +114,9 @@ export default defineComponent({
       costTime()
       showInnerDialog()
 
-      setTimeout(() => {
-        root.$router.push('/form')
-      }, 3000)
+      // setTimeout(() => {
+      //   root.$router.push('/form')
+      // }, 3000)
     })
 
     return {

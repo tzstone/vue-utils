@@ -4,6 +4,7 @@
     class="json-dialog-wrap"
     :visible.sync="visible"
     width="600px"
+    v-bind="$attrs"
     :before-close="handleClose">
     <slot></slot>
     <span slot="footer" class="dialog-footer">

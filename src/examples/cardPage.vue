@@ -3,6 +3,7 @@
     i am card-page
     <button @click="onUpdated(0)">update0</button>
     <button @click="onUpdated(1)">update1</button>
+    <!-- <component :is="comp"/> -->
 
     <div class="card0"></div>
     <div class="card1"></div>
@@ -19,10 +20,15 @@ export default defineComponent({
   props:{
     list: {
       type: Array,
-      default: () => ['bbb']
-    }
+      default: () => [] // ['bbb']
+    },
+    // getComponent: {
+    //   type: Function
+    // }
   },
   setup(props, ctx) {
+    // const comp = props.getComponent()
+
     const ins = {}
     const renderCard = inject<any>('renderCard')
 
@@ -37,13 +43,14 @@ export default defineComponent({
     const { proxy }= getCurrentInstance()
     onMounted(() => {
       props.list.forEach((type, index) => {
-        ins[index] = renderCard.call(proxy, proxy.$el.querySelector(`.card${index}`), { props: { type }})
+        ins[index] = renderCard(proxy.$el.querySelector(`.card${index}`), { props: { type }}, proxy)
       });
     })
 
     return {
       onClick,
-      onUpdated
+      onUpdated,
+      // comp
     }
   }
 })

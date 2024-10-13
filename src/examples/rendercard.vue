@@ -14,7 +14,6 @@
 import { defineComponent, provide } from '@vue/composition-api';
 import Vue from 'vue';
 
-import { getVueOptions } from '@/utils/vue';
 
 const cardComp = () => import('./cardComp.vue')
 const aaa = () => import('@/components/dynamic-a.vue')
@@ -32,27 +31,10 @@ export default defineComponent({
     type: String
   },
   setup(props, ctx) {
-    const instanceOption = getVueOptions();
-
-    function renderCard (el, options: {cardId: String, props: any, on:any}, parent?) {
-      if (this?._isVue===true) {
-        this.$once('hook:destroyed', () => {
-          _destroy()
-        })
-      } else {
-        throw new Error('调用renderCard时需将this绑定到当前vue实例')
-      }
-
-      const _destroy = () => {
-        vm.$destroy()
-        vm = null
-      }
-
-      console.info('rendercard instanceOption', instanceOption)
-
+    function renderCard (el, options: {cardId: String, props: any, on:any}, parent) {
       let vm = new Vue({
         el,
-        ...instanceOption,
+        parent, // 绑定父实例, 继承父实例原型prototype (eg: $route/$store)
         render(createElement, hack) {
           return createElement(cardComp, {
             props: options.props,
@@ -60,6 +42,16 @@ export default defineComponent({
             ref: 'card'
           })
         }
+      })
+
+      const _destroy = () => {
+        vm.$destroy()
+        vm = null
+      }
+
+      // 父实例销毁时不会自动销毁vm, 需手动销毁
+      parent.$once('hook:destroyed', () => {
+        _destroy()
       })
 
       const methods = {

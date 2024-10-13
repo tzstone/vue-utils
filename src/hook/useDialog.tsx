@@ -1,10 +1,9 @@
-import { onUnmounted } from '@vue/composition-api';
+import { getCurrentInstance, onUnmounted } from '@vue/composition-api';
 import { cloneDeep } from 'lodash-es';
 import Vue from 'vue';
 
 import JsonDialog from '@/components/JsonDialog/index.vue';
 import JsonForm, { Schema } from '@/components/JsonForm';
-import { getVueOptions } from '@/utils/vue';
 
 interface Options {
   title: string;
@@ -17,8 +16,7 @@ interface Options {
 
 export function useDialog(options: Options) {
   options = Object.assign({ immediate: true }, options)
-
-  const instanceOption = getVueOptions();
+  const { proxy } = getCurrentInstance()
 
   let instance
 
@@ -28,8 +26,8 @@ export function useDialog(options: Options) {
     }
 
     instance  = new Vue({
-      ...instanceOption,
       el: document.createElement('div'),
+      parent: proxy,
       data(){
         return {
           visible: false,
@@ -40,6 +38,7 @@ export function useDialog(options: Options) {
         const dialogAttrs = {
           attrs: {
             visible: this.visible,
+            appendToBody: true,
             submit: async () => {
               await options.onConfirm(this.form)
               this.visible = false
@@ -65,7 +64,6 @@ export function useDialog(options: Options) {
       },
     });
 
-    document.body.appendChild(instance.$el);
 
     Vue.nextTick(() => {
       instance.visible = true
@@ -76,7 +74,6 @@ export function useDialog(options: Options) {
     instance.visible = false
     Vue.nextTick(() => {
       instance.$destroy()
-      document.body.removeChild(instance.$el);
       instance = null
       close = null
       open = null
@@ -87,6 +84,7 @@ export function useDialog(options: Options) {
     open()
   }
 
+  // 父实例销毁时不会自动销毁instance, 需手动销毁
   onUnmounted(() => {
     close()
   })

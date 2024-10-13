@@ -136,6 +136,7 @@ export default defineComponent({
 
     const { proxy } = getCurrentInstance()
     onMounted(() => {
+      console.log(ctx.root.$route.path)
       proxy.$on('resetForm', resetForm)
       proxy.$on('clearForm', clearForm)
       proxy.$on('validate', validate)
