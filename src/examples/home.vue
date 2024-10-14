@@ -23,12 +23,13 @@
 </template>
 
 <script>
-import { computed, defineComponent, onMounted } from '@vue/composition-api';
+import { computed, defineComponent, getCurrentInstance, onMounted } from '@vue/composition-api';
 
 import { useDialog } from '@/hook/useDialog';
 
 export default defineComponent({
   setup(props, { root, emit }) {
+    const { proxy } = getCurrentInstance()
     const routes = computed(() => root.$router.getRoutes())
     const onAdd = () => {
       root.$store.commit('ADD')
@@ -102,6 +103,7 @@ export default defineComponent({
             type: 'input'
           }]
         },
+        parent: proxy,
         onConfirm: (form) => {
           if (form.name != 'zhangsan') return Promise.reject()
         },

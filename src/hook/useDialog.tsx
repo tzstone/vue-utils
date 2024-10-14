@@ -1,4 +1,3 @@
-import { getCurrentInstance, onUnmounted } from '@vue/composition-api';
 import { cloneDeep } from 'lodash-es';
 import Vue from 'vue';
 
@@ -9,6 +8,7 @@ interface Options {
   title: string;
   schema: Schema;
   form: any;
+  parent: Vue;
   immediate?: boolean;
   onConfirm: (form) => Promise<any>;
   onClose?: (action: 'close' | 'cancel') => void;
@@ -16,7 +16,6 @@ interface Options {
 
 export function useDialog(options: Options) {
   options = Object.assign({ immediate: true }, options)
-  const { proxy } = getCurrentInstance()
 
   let instance
 
@@ -27,7 +26,7 @@ export function useDialog(options: Options) {
 
     instance  = new Vue({
       el: document.createElement('div'),
-      parent: proxy,
+      parent: options.parent,
       data(){
         return {
           visible: false,
@@ -72,12 +71,10 @@ export function useDialog(options: Options) {
 
   let close = () => {
     instance.visible = false
-    Vue.nextTick(() => {
-      instance.$destroy()
-      instance = null
-      close = null
-      open = null
-    })
+    instance.$destroy()
+    instance = null
+    close = null
+    open = null
   }
 
   if (options.immediate) {
@@ -85,7 +82,7 @@ export function useDialog(options: Options) {
   }
 
   // 父实例销毁时不会自动销毁instance, 需手动销毁
-  onUnmounted(() => {
+  options.parent.$once('hook:destroyed', () => {
     close()
   })
 
