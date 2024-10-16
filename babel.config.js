@@ -1,10 +1,6 @@
 module.exports = {
-  presets: [
-    '@vue/cli-plugin-babel/preset',
-    ['@vue/babel-preset-jsx', { compositionAPI: true }], // 开启 jsx
-  ],
+  presets: ['vca-jsx', '@vue/cli-plugin-babel/preset'],
   plugins: [
-    ['@babel/plugin-transform-typescript', { isTSX: true }], // 开启 typescript
     [
       'component',
       {

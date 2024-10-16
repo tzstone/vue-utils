@@ -3485,12 +3485,12 @@ babel-plugin-polyfill-regenerator@^0.3.0:
   dependencies:
     "@babel/helper-define-polyfill-provider" "^0.3.1"
 
-babel-plugin-transform-vue-jsx@^3.7.0:
-  version "3.7.0"
-  resolved "https://registry.npmmirror.com/babel-plugin-transform-vue-jsx/-/babel-plugin-transform-vue-jsx-3.7.0.tgz#d40492e6692a36b594f7e9a1928f43e969740960"
-  integrity sha512-W39X07/n3oJMQd8tALBO+440NraGSF//Lo1ydd/9Nme3+QiRGFBb1Q39T9iixh0jZPPbfv3so18tNoIgLatymw==
+babel-preset-vca-jsx@^0.3.6:
+  version "0.3.6"
+  resolved "https://registry.npmmirror.com/babel-preset-vca-jsx/-/babel-preset-vca-jsx-0.3.6.tgz#7bafc7e2c990496a742083c7fdd7bc110c6eb5f4"
+  integrity sha512-0MTDmrFX5GqMpF7JtDAcKGCJfSl8prfYwpDYyaFM7BGdnTde2TBXuV6P4ltM2joVUe93jBgJneUiTe0mKbwF/w==
   dependencies:
-    esutils "^2.0.2"
+    "@babel/plugin-syntax-jsx" "^7.2.0"
 
 babel-runtime@6.x:
   version "6.26.0"
