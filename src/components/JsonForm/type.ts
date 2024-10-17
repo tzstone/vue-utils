@@ -1,3 +1,5 @@
+import { VNode } from 'vue';
+
 export type RuntimeOptions = (form) => Promise<any[]>;
 export type RuntimeShow = (form) => boolean;
 export interface FormItem {
@@ -40,6 +42,7 @@ export interface FormItem {
   col?: {
     span: number;
   };
+  render?: (h, { form }) => VNode;
 }
 
 export interface RenderFormItem extends FormItem {

@@ -29,7 +29,7 @@
     </template>
     <!-- slot -->
     <template v-else-if="item.type==='slot'">
-      <slot :name="item.field"></slot>
+      <customRender :form="form" :render="item.render"/>
     </template>
     <component :is="item.component" v-else v-model="form[item.field]" :class="item.class" :style="item.style" v-bind="item.props" v-on="item.on" />
   </el-form-item>
@@ -40,10 +40,12 @@ import { computed, defineComponent, PropType, reactive, ref, watch } from '@vue/
 import { isFunction } from 'lodash-es';
 
 import { getElementConfig } from './config';
+import customRender from './customRender.vue';
 import { FormItem, RenderFormItem, RuntimeOptions, RuntimeShow } from './type';
 
 export default defineComponent({
   name: 'FormItem',
+  components: { customRender },
   props: {
     config: {
       type: Object as PropType<FormItem>,

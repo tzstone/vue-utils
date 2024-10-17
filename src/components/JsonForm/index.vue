@@ -7,20 +7,12 @@
     <template v-if="isMultiColumn">
       <el-row v-for="(row, i) in rows" :key="i" :gutter="20">
         <el-col v-for="(item, index) in row" :key="index" :span="item.col.span">
-          <formItem :key="index" v-model="form" :config="item" >
-            <template v-if="item.type==='slot'">
-              <slot :slot="item.field" :name="item.field"></slot>
-            </template>
-          </formItem>
+          <formItem :key="index" v-model="form" :config="item" />
         </el-col>
       </el-row>
     </template>
     <template v-else>
-      <formItem v-for="(item, index) in schema.formItems" :key="index" v-model="form" :config="item" >
-        <template v-if="item.type==='slot'">
-          <slot :slot="item.field" :name="item.field"></slot>
-        </template>
-      </formItem>
+      <formItem v-for="(item, index) in schema.formItems" :key="index" v-model="form" :config="item" />
     </template>
 
     <el-form-item v-if="schema.submitBtn || schema.resetBtn">

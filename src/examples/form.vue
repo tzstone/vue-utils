@@ -1,19 +1,11 @@
 <template>
   <div>
-    <JsonForm v-model="form" :schema="schema">
-      <template #rate>
-        <el-rate v-model="form.rate"/>
-      </template>
-    </JsonForm>
+    <JsonForm v-model="form" :schema="schema"/>
 
     <el-button @click="visible=true">showdialog</el-button>
     <JsonDialog :visible.sync="visible" :submit="onSubmit" @cancel="onCancel">
       <!-- <ElButton @click="showInnerDialog">showInnerDialog</ElButton> -->
-      <JsonForm v-model="form" :schema="dialogSchema">
-        <template #rate>
-          <el-rate v-model="form.rate"/>
-        </template>
-      </JsonForm>
+      <JsonForm v-model="form" :schema="dialogSchema"/>
     </JsonDialog>
     <div>
       /-----------------------------------/
@@ -32,7 +24,7 @@
   </div>
 </template>
 
-<script>
+<script lang="tsx">
 import { Button } from 'element-ui';
 
 import JsonDialog from '@/components/JsonDialog/index.vue';
@@ -191,6 +183,9 @@ export default {
           show: (form) => {
             return form.checked
           },
+          render: (h, { form }) => {
+            return <el-rate v-model={form.rate}/>
+          }
         }
         ],
         submitBtn: {
@@ -365,6 +360,9 @@ export default {
           col: {
             span: 12
           },
+          render: (h, { form }) => {
+            return <el-rate v-model={form.rate}/>
+          }
         }
         ],
         submitBtn: {
