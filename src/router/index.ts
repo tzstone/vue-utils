@@ -19,7 +19,6 @@ files.keys().forEach((key) => {
     },
   });
 });
-console.log('routes', routes);
 Vue.use(Router);
 
 const router = new Router({
@@ -43,6 +42,23 @@ const router = new Router({
   },
 });
 
+let timer;
+router.beforeEach((to, from, next) => {
+  clearTimeout(timer);
+
+  // console.error('to', to);
+  next();
+});
+
 // window['router'] = router;
 
 export default router;
+
+export function goBack() {
+  router.go(-1);
+  // 执行了go(-1), 延迟时间内还没进入beforeEach, 则认为没有可返回的上一级路由.
+  // 针对代码打开新tab的场景, 如果是手动输入地址, 则会返回空页面
+  timer = setTimeout(() => {
+    router.push('/');
+  }, 100);
+}
