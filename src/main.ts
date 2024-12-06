@@ -29,6 +29,12 @@ console.info('instanceOption', instanceOption);
 Vue.config.productionTip = false;
 Vue.use(VueCompositionAPI);
 Vue.use(eventBus);
+
+// 添加原型对象
+Vue.prototype.$myObject = {
+  message: 'Hello from prototype!',
+};
+
 /* eslint-disable no-new */
 new Vue({
   ...instanceOption,
