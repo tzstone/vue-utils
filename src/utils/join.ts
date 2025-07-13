@@ -232,3 +232,35 @@ export function rightJoin(leftTable: any[], rightTable: any[], keyPairs: KeyPair
 export function fullJoin(leftTable: any[], rightTable: any[], keyPairs: KeyPair[], options?: Partial<JoinOptions>) {
   return join(leftTable, rightTable, keyPairs, { joinType: 'full', ...options });
 }
+
+/**
+ * 合并多个表（纵向叠加，自动补齐所有字段）
+ * @param {Array<Object>} tables
+ */
+
+export function unions(tables: Record<string, any>[][], fields?): Record<string, any>[] {
+  if (!fields || fields.length == 0) {
+    fields = [];
+    const fieldsSet = new Set<string>();
+    // 保留首表字段顺序优先
+    for (const table of tables) {
+      if (table.length > 0) {
+        for (const k of Object.keys(table[0])) {
+          if (!fieldsSet.has(k)) {
+            fieldsSet.add(k);
+            fields.push(k);
+          }
+        }
+      }
+    }
+  }
+
+  function fillRow(row: Record<string, any> | undefined): Record<string, any> {
+    const result: Record<string, any> = {};
+    for (const key of fields) {
+      result[key] = row && key in row ? row[key] : null;
+    }
+    return result;
+  }
+  return tables.flatMap((table) => table.map(fillRow));
+}
