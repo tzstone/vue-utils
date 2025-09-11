@@ -119,14 +119,17 @@ export default {
 <style lang="scss" >
 .dynamic-table {
   @for $i from 0 through 50 {
-    .el-table__cell.column-#{$i}::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: -1px;
-      height: calc(100% + 1px); /* 覆盖行边框线 */
-      width: 1px;
-      background-color: var(--border-color-#{$i}); /* 默认使用 el-table 的边框色 */
+    // .el-table__cell.column-#{$i}::after {
+    //   content: '';
+    //   position: absolute;
+    //   top: 0;
+    //   right: -1px;
+    //   height: calc(100% + 1px); /* 覆盖行边框线 */
+    //   width: 1px;
+    //   background-color: var(--border-color-#{$i}); /* 默认使用 el-table 的边框色 */
+    // }
+     .el-table__cell.column-#{$i} {
+      border-right-color: var(--border-color-#{$i}, #EBEEF5); /* 默认使用 el-table 的边框色 */
     }
   }
 }
