@@ -18,6 +18,11 @@ export default {
       }
     }
   },
+  computed: {
+    computedObj() {
+      return { count: this.obj.count }
+    }
+  },
   mounted() {
     // const rawStart = performance.now()
     // for(let i=0; i<100000; i++) {
@@ -42,6 +47,13 @@ export default {
       let temp = this.obj.count + 1
     }
     console.log('Direct this access time:', performance.now() - rawStart)
+
+    // 使用计算属性, 会进入computed的getter
+    const computedStart = performance.now()
+    for(let i=0; i<1000000; i++) {
+      let temp = this.computedObj.count + 1
+    }
+    console.log('computed variable access time:', performance.now() - computedStart)
 
     // 解构成局部变量, 少了一层访问, 但保持响应式, 访问obj.count会触发getter
     const { obj } = this
